@@ -362,7 +362,7 @@ export default function DashboardPage() {
 
                         <div className="flex-1 overflow-y-auto p-6 space-y-2">
                             {isSearching ? (
-                                <p className="text-center text-white/50 mt-10 animate-pulse">Searching global cities...</p>
+                                <p className="text-center text-white/50 mt-10 animate-pulse">전 세계 도시를 검색 중...</p>
                             ) : searchResults.length > 0 ? (
                                 searchResults.map((geo, i) => (
                                     <button
@@ -377,10 +377,10 @@ export default function DashboardPage() {
                                     </button>
                                 ))
                             ) : searchQuery && !isSearching ? (
-                                <p className="text-center text-white/50 mt-10">No cities found.</p>
+                                <p className="text-center text-white/50 mt-10">검색 결과가 없습니다.</p>
                             ) : (
                                 <div className="mt-4">
-                                    <p className="text-xs font-bold tracking-widest text-white/30 uppercase mb-4">Saved Cities</p>
+                                    <p className="text-xs font-bold tracking-widest text-white/30 uppercase mb-4">저장된 도시</p>
                                     <div className="space-y-2">
                                         {savedCities.map((city, i) => (
                                             <div key={city.id} className="w-full text-left p-4 bg-white/5 rounded-2xl flex justify-between items-center">
@@ -417,12 +417,12 @@ export default function DashboardPage() {
                             <div className="w-24 h-24 bg-black text-white rounded-full flex items-center justify-center mx-auto mb-8 shadow-xl">
                                 <CheckCircle2 size={48} />
                             </div>
-                            <h3 className="text-3xl font-extrabold tracking-tight mb-4">You're Set!</h3>
-                            <p className="text-neutral-600 font-medium mb-10 text-lg leading-relaxed">Have a great day.<br />Selected items are on cooldown.</p>
+                            <h3 className="text-3xl font-extrabold tracking-tight mb-4">완벽해요!</h3>
+                            <p className="text-neutral-600 font-medium mb-10 text-lg leading-relaxed">멋진 하루 보내세요.<br />선택한 아이템들은 쿨다운 중이에요.</p>
                             <button onClick={() => setIsCommitted(false)} className="w-full px-6 py-4 bg-neutral-100 text-black border border-neutral-200 rounded-2xl font-bold hover:bg-neutral-200 transition-colors mb-4">
-                                Change Look
+                                다른 코디 보기
                             </button>
-                            <Link href="/" className="inline-block mt-2 text-sm text-neutral-400 font-bold tracking-wider hover:text-black transition-colors uppercase">Return Home</Link>
+                            <Link href="/" className="inline-block mt-2 text-sm text-neutral-400 font-bold tracking-wider hover:text-black transition-colors">홈으로 돌아가기</Link>
                         </motion.div>
                     </motion.div>
                 )}

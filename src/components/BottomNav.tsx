@@ -2,34 +2,33 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Shirt, User } from "lucide-react";
+import { Sun, Shirt, User } from "lucide-react";
 import clsx from "clsx";
 
 export default function BottomNav() {
     const pathname = usePathname();
-
-    // Only show on main app pages
-    const allowedPaths = ["/dashboard", "/wardrobe", "/profile"];
-    const showNav = allowedPaths.includes(pathname);
-
+    const showNav = ["/dashboard", "/wardrobe", "/onboarding"].some(p => pathname.startsWith(p));
     if (!showNav) return null;
 
+    const tabs = [
+        { href: "/dashboard", icon: Sun, label: "투데이" },
+        { href: "/wardrobe", icon: Shirt, label: "옷장" },
+        { href: "/onboarding", icon: User, label: "마이" },
+    ];
+
     return (
-        <div className="fixed bottom-0 left-0 w-full z-50 bg-[#121212]/85 backdrop-blur-3xl border-t border-white/10 px-6 py-3 pb-safe flex justify-around items-center">
-            <Link href="/dashboard" className="flex flex-col items-center gap-1.5 group w-16">
-                <Home size={24} strokeWidth={pathname === "/dashboard" ? 2.5 : 2} className={clsx("transition-colors", pathname === "/dashboard" ? "text-white" : "text-white/40 group-hover:text-white/70")} />
-                <span className={clsx("text-[10px] font-semibold tracking-wide", pathname === "/dashboard" ? "text-white" : "text-white/40")}>투데이</span>
-            </Link>
-
-            <Link href="/wardrobe" className="flex flex-col items-center gap-1.5 group w-16">
-                <Shirt size={24} strokeWidth={pathname === "/wardrobe" ? 2.5 : 2} className={clsx("transition-colors", pathname === "/wardrobe" ? "text-white" : "text-white/40 group-hover:text-white/70")} />
-                <span className={clsx("text-[10px] font-semibold tracking-wide", pathname === "/wardrobe" ? "text-white" : "text-white/40")}>옷장</span>
-            </Link>
-
-            <Link href="/onboarding" className="flex flex-col items-center gap-1.5 group w-16">
-                <User size={24} strokeWidth={pathname === "/onboarding" ? 2.5 : 2} className={clsx("transition-colors", pathname === "/onboarding" ? "text-white" : "text-white/40 group-hover:text-white/70")} />
-                <span className={clsx("text-[10px] font-semibold tracking-wide", pathname === "/onboarding" ? "text-white" : "text-white/40")}>마이</span>
-            </Link>
-        </div>
+        <nav className="fixed bottom-0 left-0 w-full z-50 bg-[var(--background)]/80 backdrop-blur-2xl border-t border-[var(--separator)] pb-safe">
+            <div className="flex justify-around items-center h-[50px]">
+                {tabs.map(tab => {
+                    const isActive = pathname.startsWith(tab.href);
+                    return (
+                        <Link key={tab.href} href={tab.href} className="flex flex-col items-center gap-0.5 w-16 pt-1">
+                            <tab.icon size={22} strokeWidth={isActive ? 2.2 : 1.8} className={clsx("transition-colors", isActive ? "text-[var(--accent)]" : "text-[var(--muted-foreground)]")} />
+                            <span className={clsx("text-[10px] font-medium", isActive ? "text-[var(--accent)]" : "text-[var(--muted-foreground)]")}>{tab.label}</span>
+                        </Link>
+                    );
+                })}
+            </div>
+        </nav>
     );
 }
