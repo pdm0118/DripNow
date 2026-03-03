@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import BottomNav from "@/components/BottomNav";
 
 export const metadata: Metadata = {
   title: "DripNow | No More Outfit Dilemmas",
@@ -15,6 +16,7 @@ export default function RootLayout({
     <html lang="kr" className="scroll-smooth">
       <body className="antialiased text-[var(--foreground)] bg-[var(--background)]">
         {children}
+        <BottomNav />
       </body>
     </html>
   );

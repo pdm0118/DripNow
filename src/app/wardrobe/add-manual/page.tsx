@@ -22,6 +22,42 @@ export default function AddManualPage() {
     });
 
     const isValid = formData.name.trim().length > 0 && formData.category !== "";
+    const [isSearchingAI, setIsSearchingAI] = useState(false);
+    const [aiError, setAiError] = useState<string | null>(null);
+
+    const handleSearchProduct = async () => {
+        if (!formData.name.trim()) return;
+        setIsSearchingAI(true);
+        setAiError(null);
+
+        try {
+            const res = await fetch("/api/search-product", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ query: `${formData.name} ${formData.color}`.trim() })
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "검색 실패");
+
+            // Season logic based on thickness mapping
+            let autoSeason = ["사계절"];
+            if (data.thickness === "heavy" || data.thickness === "thick") autoSeason = ["겨울", "가을"];
+            if (data.thickness === "thin") autoSeason = ["여름", "봄"];
+
+            setFormData(prev => ({
+                ...prev,
+                name: data.name || prev.name,
+                category: data.category || prev.category,
+                color: data.color || prev.color,
+                season: autoSeason
+            }));
+        } catch (err: any) {
+            setAiError(err.message || "AI 검색에 실패했습니다.");
+        } finally {
+            setIsSearchingAI(false);
+        }
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -89,9 +125,21 @@ export default function AddManualPage() {
                                 type="text"
                                 value={formData.name}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                placeholder="예) 아크네 스튜디오 오버핏 블레이저"
+                                placeholder="예) 넌블랭크 발마칸코트 dark navy"
                                 className="w-full text-2xl sm:text-3xl pb-4 bg-transparent border-b-2 border-neutral-200 dark:border-neutral-800 focus:outline-none focus:border-[var(--foreground)] transition-colors placeholder:text-neutral-300 dark:placeholder:text-neutral-700 font-bold"
                             />
+                            <div className="mt-4 flex items-center justify-between">
+                                <button
+                                    type="button"
+                                    onClick={handleSearchProduct}
+                                    disabled={isSearchingAI || !formData.name.trim()}
+                                    className="px-4 py-2 bg-[var(--foreground)] text-[var(--background)] rounded-full text-sm font-bold flex items-center gap-2 hover:opacity-80 transition-opacity disabled:opacity-50"
+                                >
+                                    {isSearchingAI ? <Sparkles size={16} className="animate-spin" /> : <Sparkles size={16} />}
+                                    AI로 정보 채우기
+                                </button>
+                                {aiError && <span className="text-red-500 text-sm font-medium">{aiError}</span>}
+                            </div>
                         </div>
 
                         <div className="grid sm:grid-cols-2 gap-8">

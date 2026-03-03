@@ -122,7 +122,7 @@ export default function WardrobePage() {
             </main>
 
             {/* Floating Action Button (FAB) for adding clothes */}
-            <div className="fixed bottom-10 right-6 sm:right-12 z-50 flex flex-col items-end gap-4">
+            <div className="fixed bottom-28 right-6 sm:right-12 z-[45] flex flex-col items-end gap-4">
                 <AnimatePresence>
                     {isAddMenuOpen && (
                         <motion.div

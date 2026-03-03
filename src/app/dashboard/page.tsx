@@ -33,20 +33,20 @@ export interface City {
 const DEFAULT_CITY: City = { id: "seoul", name: "Seoul", lat: 37.5665, lon: 126.9780, landmarkLabel: "Current Location" };
 
 const getDynamicBackground = (weather: WeatherData | null) => {
-    if (!weather) return "from-neutral-900 to-black";
+    if (!weather) return "from-[#1C1C1E] to-[#000000]";
     const isDay = weather.icon_code.includes('d');
     const condition = weather.icon_code.slice(0, 2);
 
     if (isDay) {
-        if (condition === '01') return "from-[#4dbce9] to-[#26a0da]";
-        if (['02', '03', '04'].includes(condition)) return "from-[#7fa2b6] to-[#5a768c]";
-        if (['09', '10', '11'].includes(condition)) return "from-[#4a5568] to-[#2d3748]";
-        return "from-[#62778A] to-[#8799A8]";
+        if (condition === '01') return "from-[#2A84FF] to-[#0055FF]"; // Clean Blue
+        if (['02', '03', '04'].includes(condition)) return "from-[#638496] to-[#2E4F63]"; // Clean Steel
+        if (['09', '10', '11'].includes(condition)) return "from-[#394553] to-[#1A232E]"; // Clean Slate
+        return "from-[#4A6572] to-[#233945]";
     } else {
-        if (condition === '01') return "from-[#0b2b5e] to-[#04122d]";
-        if (['02', '03', '04'].includes(condition)) return "from-[#1b2735] to-[#090a0f]";
-        if (['09', '10', '11'].includes(condition)) return "from-[#1a202c] to-[#050505]";
-        return "from-[#1B2735] to-[#090A0F]";
+        if (condition === '01') return "from-[#0A1128] to-[#01040A]"; // Midnight
+        if (['02', '03', '04'].includes(condition)) return "from-[#111A24] to-[#05090F]"; // Dark Gray Blue
+        if (['09', '10', '11'].includes(condition)) return "from-[#0F1319] to-[#040609]"; // Very Dark Slate
+        return "from-[#0D1520] to-[#03060B]";
     }
 };
 
@@ -94,7 +94,15 @@ export default function DashboardPage() {
                     city: data.name
                 });
             } catch (err) {
+                console.warn("Weather API failed, using fallback:", err);
                 setWeatherError("날씨 연동 실패");
+                // Fallback weather so the app still works even if the API key is unauthorized/pending
+                setWeather({
+                    temp: 22, feels_like: 21,
+                    humidity: 50, wind_speed: 2,
+                    description: "clear sky (fallback)", icon_code: "01d",
+                    city: activeCity.name
+                });
             } finally {
                 setIsLoadingWeather(false);
             }
@@ -225,90 +233,84 @@ export default function DashboardPage() {
             "min-h-[100dvh] font-sans relative overflow-hidden text-white transition-all duration-1000 bg-gradient-to-b flex flex-col",
             getDynamicBackground(weather)
         )}>
-            {/* Background 
-            Typography Collage */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.04] select-none flex items-center justify-center">
-                <h1 className="text-[30vw] font-extrabold tracking-tighter uppercase leading-none whitespace-nowrap -rotate-12 scale-150">
-                    {activeCity.name}
-                </h1>
-            </div>
-
-            {/* Pagination / City Header (Mobile Optimized) */}
-            <header className="relative w-full pt-12 pb-4 px-6 flex justify-between items-center z-20">
+            {/* Pagination / City Header (Native Optimized) */}
+            <header className="relative w-full pt-14 pb-4 px-6 flex justify-between items-center z-20">
                 <div className="flex gap-2">
                     {savedCities.map((_, i) => (
-                        <div key={i} className={clsx("h-1.5 rounded-full transition-all duration-300", i === cityIndex ? "w-6 bg-white" : "w-1.5 bg-white/30")} />
+                        <div key={i} className={clsx("h-1.5 rounded-full transition-all duration-300", i === cityIndex ? "w-5 bg-white" : "w-1.5 bg-white/30")} />
                     ))}
                 </div>
-                <button onClick={() => setIsSearchOpen(true)} className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md active:scale-95 transition-transform"><List size={18} /></button>
+                <button onClick={() => setIsSearchOpen(true)} className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md active:scale-95 transition-transform">
+                    <List size={20} className="text-white/90" />
+                </button>
             </header>
 
             {/* Scrollable Main Area (1-Tap Viewer) */}
             <main className="flex-1 overflow-y-auto px-6 pb-40 z-10 scrollbar-hide flex flex-col">
 
-                {/* Weather Hero (Extremely Minimal) */}
+                {/* Weather Hero (iOS Native Style) */}
                 <div className="flex flex-col items-center justify-center text-center mt-6 mb-10">
-                    <h2 className="text-3xl font-bold tracking-tight mb-1 drop-shadow-md">{activeCity.name}</h2>
+                    <h2 className="text-3xl font-regular tracking-tight mb-2 drop-shadow-sm">{activeCity.name}</h2>
 
                     {isLoadingWeather ? (
                         <div className="flex flex-col items-center animate-pulse mt-4">
-                            <div className="w-20 h-20 bg-white/20 rounded-full mb-4" />
-                            <div className="h-16 w-32 bg-white/20 rounded-2xl" />
+                            <div className="w-16 h-16 bg-white/20 rounded-full mb-4" />
+                            <div className="h-12 w-24 bg-white/20 rounded-2xl" />
                         </div>
                     ) : weather ? (
                         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center">
-                            <h1 className="text-[7rem] font-extralight tracking-tighter leading-none drop-shadow-xl my-2" style={{ fontVariantNumeric: "tabular-nums" }}>
+                            <h1 className="text-[6.5rem] font-thin tracking-tighter leading-none drop-shadow-sm my-1" style={{ fontVariantNumeric: "tabular-nums" }}>
                                 {weather.temp}°
                             </h1>
-                            <p className="text-xl font-medium tracking-wide capitalize opacity-90 drop-shadow-md">
+                            <p className="text-xl font-medium tracking-wide capitalize opacity-90 drop-shadow-sm">
                                 {weather.description}
                             </p>
-                            <div className="flex gap-4 mt-3 text-sm opacity-80 font-medium">
-                                <span>H:{weather.humidity}%</span>
-                                <span>W:{weather.wind_speed}m/s</span>
+                            <div className="flex gap-4 mt-2 text-[15px] opacity-80 font-medium tracking-wide">
+                                <span>체감 {weather.feels_like}°</span>
+                                <span>습도 {weather.humidity}%</span>
                             </div>
                         </motion.div>
                     ) : (
-                        <p className="text-white/50 py-10">Failed to load weather</p>
+                        <p className="text-white/50 py-10 opacity-50 text-sm">Weather data unavailable</p>
                     )}
                 </div>
 
-                {/* 1-Tap Recommendations Card */}
+                {/* 1-Tap Recommendations Card (Native Native UI) */}
                 <div className="flex-1 w-full max-w-md mx-auto relative flex flex-col justify-end">
                     {wardrobe.length === 0 ? (
-                        <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="bg-white/10 backdrop-blur-2xl border border-white/20 p-8 rounded-[2rem] text-center shadow-2xl">
+                        <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="bg-black/20 backdrop-blur-3xl border border-white/10 p-8 rounded-[2rem] text-center shadow-lg">
                             <AlertCircle className="mx-auto mb-4 text-white/50" size={32} />
-                            <h3 className="text-xl font-bold mb-2">옷장이 비어있습니다</h3>
-                            <p className="text-sm text-white/70 mb-6">온도 맞춤 추천을 위해 옷을 등록해주세요.</p>
-                            <Link href="/wardrobe" className="block w-full py-4 bg-white text-black font-bold rounded-2xl">옷 등록하기</Link>
+                            <h3 className="text-xl font-semibold mb-2 tracking-tight">옷장이 비어있습니다</h3>
+                            <p className="text-sm text-white/60 mb-8">온도에 맞는 맞춤 코디를 위해<br />옷을 먼저 등록해주세요.</p>
+                            <Link href="/wardrobe" className="block w-full py-4 text-[15px] bg-white text-black font-semibold rounded-2xl transition-transform active:scale-95">옷 등록하기</Link>
                         </motion.div>
                     ) : !renderedPreset ? (
-                        <div className="bg-white/10 backdrop-blur-2xl border border-white/20 p-8 rounded-[2rem] text-center animate-pulse h-64 flex items-center justify-center" />
+                        <div className="bg-black/20 backdrop-blur-3xl border border-white/10 p-8 rounded-[2rem] text-center animate-pulse h-64 flex items-center justify-center" />
                     ) : (
                         <motion.div
                             key={renderedPreset.id}
                             initial={{ y: 40, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                            className="bg-white/15 backdrop-blur-[40px] border border-white/20 p-6 rounded-[2rem] shadow-[0_30px_60px_rgba(0,0,0,0.3)] w-full"
+                            className="bg-black/20 backdrop-blur-3xl border border-white/10 p-6 rounded-[2.5rem] shadow-2xl w-full"
                         >
-                            <div className="flex justify-between items-center mb-6 px-2">
-                                <h3 className="font-bold text-lg">{renderedPreset.name}</h3>
-                                <span className="text-[10px] uppercase tracking-widest bg-white/20 px-3 py-1 rounded-full">Automated</span>
+                            <div className="flex justify-between items-center mb-5 px-3">
+                                <h3 className="font-semibold text-[17px] tracking-tight text-white/90">오늘의 추천 코디</h3>
+                                <span className="text-[12px] font-medium text-white/50 bg-white/10 px-3 py-1.5 rounded-full">TPO 맞춤</span>
                             </div>
 
-                            <div className="space-y-3">
+                            <div className="space-y-2.5">
                                 {renderedPreset.items.map((item: any) => (
-                                    <div key={item.id} className="flex items-center justify-between bg-black/20 p-4 rounded-2xl group active:scale-[0.98] transition-all">
-                                        <div>
-                                            <p className="text-[10px] text-white/50 font-bold tracking-widest uppercase mb-0.5">{item.type}</p>
-                                            <p className="font-medium text-[15px]">{item.name}</p>
+                                    <div key={item.id} className="flex items-center justify-between bg-white/5 hover:bg-white/10 p-4 rounded-3xl group transition-all">
+                                        <div className="px-1">
+                                            <p className="text-[11px] text-white/50 font-medium tracking-wide uppercase mb-1">{item.type}</p>
+                                            <p className="font-medium text-[16px] tracking-tight">{item.name}</p>
                                         </div>
                                         <button
                                             onClick={() => handleSwap(item.id, item.rawCategory)}
-                                            className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/30 transition-colors"
+                                            className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center active:bg-white/30 transition-colors shrink-0"
                                         >
-                                            <RefreshCw size={16} className={clsx(swappingItem === item.id && "animate-spin")} />
+                                            <RefreshCw size={18} className={clsx("text-white/80", swappingItem === item.id && "animate-spin")} />
                                         </button>
                                     </div>
                                 ))}
@@ -318,18 +320,18 @@ export default function DashboardPage() {
                 </div>
             </main>
 
-            {/* 1-Tap Sticky Action Button */}
+            {/* 1-Tap Sticky Action Button (Native Bottom Sheet Style) */}
             <AnimatePresence>
                 {(!isCommitted && wardrobe.length > 0 && renderedPreset) && (
                     <motion.div
-                        initial={{ y: 100 }} animate={{ y: 0 }} exit={{ y: 100 }}
-                        className="fixed bottom-0 left-0 w-full p-6 pb-8 z-40 bg-gradient-to-t from-black/80 to-transparent flex justify-center backdrop-blur-sm pointer-events-none"
+                        initial={{ y: 120 }} animate={{ y: 0 }} exit={{ y: 120 }}
+                        className="fixed bottom-[72px] left-0 w-full p-6 pb-6 z-40 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex justify-center pointer-events-none"
                     >
                         <button
                             onClick={commitOutfit}
-                            className="pointer-events-auto max-w-md w-full py-5 bg-white text-black text-sm font-bold tracking-[0.1em] uppercase rounded-[2rem] shadow-2xl active:scale-95 transition-all flex items-center justify-center gap-2"
+                            className="pointer-events-auto max-w-md w-full py-4 bg-white text-black text-[16px] font-semibold tracking-tight rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.12)] active:scale-[0.98] transition-transform flex items-center justify-center gap-2"
                         >
-                            <CheckCircle2 size={18} /> 스타일 확정하기
+                            이 코디로 결정하기
                         </button>
                     </motion.div>
                 )}
@@ -343,19 +345,19 @@ export default function DashboardPage() {
                         transition={{ type: "spring", damping: 25, stiffness: 200 }}
                         className="fixed inset-0 z-50 bg-[#121212] text-white flex flex-col"
                     >
-                        <div className="p-6 pt-12 flex items-center gap-4 border-b border-white/10">
+                        <div className="p-6 pt-14 flex items-center gap-3 border-b border-white/10 bg-[#121212]/80 backdrop-blur-xl">
                             <form onSubmit={searchCity} className="flex-1 relative">
-                                <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50" />
+                                <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50" />
                                 <input
                                     autoFocus
                                     type="text"
-                                    placeholder="Search for a city..."
+                                    placeholder="도시 검색 (예: Seoul, New York)"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full bg-white/10 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-white/30"
+                                    className="w-full bg-white/10 rounded-full py-3.5 pl-12 pr-4 text-[16px] text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
                                 />
                             </form>
-                            <button onClick={() => setIsSearchOpen(false)} className="p-3 bg-white/10 rounded-full"><X size={20} /></button>
+                            <button onClick={() => setIsSearchOpen(false)} className="p-3 text-white/70 hover:text-white transition-colors">취소</button>
                         </div>
 
                         <div className="flex-1 overflow-y-auto p-6 space-y-2">
