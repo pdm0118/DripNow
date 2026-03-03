@@ -53,9 +53,9 @@ export default function Home() {
           transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           className="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full max-w-md sm:max-w-none justify-center mt-4"
         >
-          <Link href="/onboarding" className="group flex items-center justify-center gap-3 rounded-full bg-[var(--foreground)] text-[var(--background)] px-8 md:px-10 py-4 md:py-5 text-lg md:text-xl font-medium shadow-2xl hover:scale-[1.02] transition-transform duration-300">
+          <Link href="/wardrobe" className="group flex items-center justify-center gap-3 rounded-full bg-[var(--foreground)] text-[var(--background)] px-8 md:px-10 py-4 md:py-5 text-lg md:text-xl font-medium shadow-2xl hover:scale-[1.02] transition-transform duration-300">
             <Sparkles size={22} className="opacity-80 group-hover:opacity-100 transition-opacity" />
-            내 옷장 만들기
+            내 옷장 관리
           </Link>
           <Link href="/dashboard" className="group flex items-center justify-center gap-3 rounded-full bg-transparent text-[var(--foreground)] border border-[var(--card-border)] backdrop-blur-md px-8 md:px-10 py-4 md:py-5 text-lg md:text-xl font-medium hover:border-[var(--foreground)] transition-all duration-300">
             오늘 뭐 입지?
