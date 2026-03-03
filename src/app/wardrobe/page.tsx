@@ -6,18 +6,12 @@ import { Plus, Search, Filter, Settings2, Image as ImageIcon, Link2, Type, Spark
 import clsx from "clsx";
 import Link from "next/link";
 
+import { useLocalStorage, ClothingItem } from "@/hooks/useLocalStorage";
+
 export default function WardrobePage() {
     const [isAddMenuOpen, setIsAddMenuOpen] = useState(false);
     const [activeTab, setActiveTab] = useState("all");
-
-    // Dummy data for visual layout
-    const MOCK_ITEMS = [
-        { id: 1, name: "오버핏 블랙 블레이저", category: "Outer", season: "Spring/Fall", color: "Black" },
-        { id: 2, name: "시티보이 블루 셔츠", category: "Top", season: "All", color: "Blue" },
-        { id: 3, name: "와이드 흑청 데님", category: "Bottom", season: "All", color: "Dark Grey" },
-        { id: 4, name: "화이트 나일론 팬츠", category: "Bottom", season: "Summer", color: "White" },
-        { id: 5, name: "스탠다드 울 코트", category: "Outer", season: "Winter", color: "Charcoal" },
-    ];
+    const [wardrobe] = useLocalStorage<ClothingItem[]>("dripnow_wardrobe", []);
 
     const TABS = [
         { id: "all", label: "All Items" },
@@ -27,6 +21,13 @@ export default function WardrobePage() {
         { id: "shoes", label: "Shoes/Acc" },
     ];
 
+    // Filter logic
+    const filteredItems = wardrobe.filter(item => {
+        if (activeTab === "all") return true;
+        if (activeTab === "shoes") return item.category === "shoes" || item.category === "accessory";
+        return item.category === activeTab;
+    });
+
     return (
         <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] font-sans relative overflow-x-hidden pt-12 pb-32">
 
@@ -34,7 +35,7 @@ export default function WardrobePage() {
             <header className="px-6 sm:px-12 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
                 <div>
                     <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-[-0.03em] mb-2 text-[var(--foreground)]">내 옷장</h1>
-                    <p className="text-neutral-500 font-medium text-lg">완벽한 코디를 위한 당신만의 컬렉션 (총 {MOCK_ITEMS.length}벌)</p>
+                    <p className="text-neutral-500 font-medium text-lg">완벽한 코디를 위한 당신만의 컬렉션 (총 {wardrobe.length}벌)</p>
                 </div>
 
                 {/* Search & Filter */}
@@ -77,7 +78,7 @@ export default function WardrobePage() {
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 gap-y-10">
 
                     {/* Items */}
-                    {MOCK_ITEMS.map((item) => (
+                    {filteredItems.map((item) => (
                         <div key={item.id} className="group cursor-pointer">
                             <div className="aspect-[3/4] rounded-3xl bg-neutral-100 dark:bg-neutral-900 mb-4 overflow-hidden relative border border-[var(--card-border)] group-hover:border-neutral-300 dark:group-hover:border-neutral-700 transition-colors flex items-center justify-center">
                                 {/* Visual Placeholder */}
@@ -94,7 +95,7 @@ export default function WardrobePage() {
                                 <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-neutral-500">
                                     <span>{item.category}</span>
                                     <span>•</span>
-                                    <span>{item.season}</span>
+                                    <span>{item.color}</span>
                                 </div>
                             </div>
                         </div>
@@ -102,14 +103,17 @@ export default function WardrobePage() {
                 </div>
 
                 {/* Empty State / Add First Item Prompt (Visible if no items) */}
-                {MOCK_ITEMS.length === 0 && (
+                {wardrobe.length === 0 && (
                     <div className="flex flex-col items-center justify-center py-32 text-center">
                         <div className="w-24 h-24 bg-neutral-100 dark:bg-neutral-900 rounded-full flex items-center justify-center mb-6">
                             <Sparkles size={40} className="text-neutral-400" />
                         </div>
                         <h2 className="text-3xl font-bold tracking-tight mb-4">옷장이 아직 비어있네요</h2>
                         <p className="text-neutral-500 text-lg mb-8 max-w-md mx-auto leading-relaxed">자주 입는 옷부터 하나씩 등록해보세요. DripNow가 찰떡같은 코디를 제안해드립니다.</p>
-                        <button className="px-8 py-4 bg-[var(--foreground)] text-[var(--background)] rounded-full text-lg font-bold shadow-xl hover:scale-105 transition-transform flex items-center gap-2">
+                        <button
+                            onClick={() => setIsAddMenuOpen(true)}
+                            className="px-8 py-4 bg-[var(--foreground)] text-[var(--background)] rounded-full text-lg font-bold shadow-xl hover:scale-[1.03] transition-transform flex items-center gap-2"
+                        >
                             <Plus size={24} /> 첫 번째 옷 등록하기
                         </button>
                     </div>

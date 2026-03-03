@@ -7,8 +7,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
 
+import { useLocalStorage, ClothingItem } from "@/hooks/useLocalStorage";
+
 export default function AddManualPage() {
     const router = useRouter();
+    const [wardrobe, setWardrobe] = useLocalStorage<ClothingItem[]>("dripnow_wardrobe", []);
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
@@ -18,18 +21,34 @@ export default function AddManualPage() {
         fit: ""
     });
 
-    const isValid = formData.name.length > 0 && formData.category !== "";
+    const isValid = formData.name.trim().length > 0 && formData.category !== "";
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!isValid) return;
 
         setIsLoading(true);
-        // Fake saving delay
+
+        // Construct new clothing item
+        const newItem: ClothingItem = {
+            id: `item_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
+            category: formData.category as any,
+            name: formData.name.trim(),
+            color: formData.color.trim() || "Multi",
+            thickness: "normal", // Default thickess, can be expanded later
+            fit: formData.fit || "standard",
+            isWashing: false,
+            createdAt: new Date().toISOString(),
+        };
+
+        // Add to existing wardrobe array in localStorage
+        setWardrobe([...wardrobe, newItem]);
+
+        // Fake saving delay for UX
         setTimeout(() => {
             setIsLoading(false);
             router.push("/wardrobe");
-        }, 1200);
+        }, 800);
     };
 
     const toggleSeason = (s: string) => {
