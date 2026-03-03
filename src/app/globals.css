@@ -2,19 +2,22 @@
 
 :root {
   /* UI Surface Colors */
-  --background: #fafafa;
-  --foreground: #111111;
+  --background: #ffffff;
+  /* Pure white for a crisp, luxurious feel */
+  --foreground: #000000;
   --card-bg: #ffffff;
-  --card-border: rgba(0, 0, 0, 0.05);
-  
-  /* Brand/Accent Colors (e.g. DripNow signature color) */
-  --accent: #2c2c2c; /* Sleek dark gray for light mode */
+  --card-border: rgba(0, 0, 0, 0.03);
+  /* Extremely subtle border */
+
+  /* Brand/Accent Colors */
+  --accent: #111111;
+  /* Almost pure black */
   --accent-foreground: #ffffff;
-  
+
   /* Utility Colors */
-  --muted: #f4f4f5;
-  --muted-foreground: #71717a;
-  
+  --muted: #f8f8f8;
+  --muted-foreground: #737373;
+
   /* Spacing and Radius */
   --radius-sm: 8px;
   --radius-md: 16px;
@@ -24,16 +27,19 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #09090b;
-    --foreground: #fafafa;
-    --card-bg: #111111;
-    --card-border: rgba(255, 255, 255, 0.08);
-    
+    --background: #000000;
+    /* Pure black */
+    --foreground: #ffffff;
+    --card-bg: #0a0a0a;
+    /* Slightly lighter than pure black for depth */
+    --card-border: rgba(255, 255, 255, 0.05);
+    /* Very subtle */
+
     --accent: #ffffff;
-    --accent-foreground: #09090b;
-    
-    --muted: #27272a;
-    --muted-foreground: #a1a1aa;
+    --accent-foreground: #000000;
+
+    --muted: #171717;
+    --muted-foreground: #a3a3a3;
   }
 }
 
@@ -46,12 +52,12 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  
+
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);
   --radius-xl: var(--radius-xl);
-  
+
   --font-sans: var(--font-inter);
 }
 
@@ -61,7 +67,8 @@
   padding: 0;
 }
 
-html, body {
+html,
+body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
@@ -75,6 +82,7 @@ html, body {
 .animate-hover {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
 .animate-hover:hover {
   transform: translateY(-2px);
 }

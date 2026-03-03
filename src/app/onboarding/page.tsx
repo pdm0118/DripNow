@@ -131,31 +131,31 @@ function StepOneNickname({ profile, setProfile, onNext }: StepProps) {
 
     return (
         <motion.div variants={stepVariants} initial="hidden" animate="visible" exit="exit" className="flex flex-col h-full justify-center">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4">어떻게 불러드릴까요?</h2>
-            <p className="text-[var(--muted-foreground)] text-lg mb-10">DripNow에서 사용할 멋진 닉네임을 정해주세요.</p>
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-[-0.02em] mb-6 text-[var(--foreground)]">어떻게 불러드릴까요?</h2>
+            <p className="text-[var(--muted-foreground)] text-lg sm:text-xl font-light mb-12">DripNow에서 사용할 멋진 닉네임을 정해주세요.</p>
 
             <input
                 type="text"
                 value={profile.nickname}
                 onChange={(e) => setProfile({ ...profile, nickname: e.target.value })}
-                placeholder="예) 마포구패션왕"
-                className="text-2xl p-6 bg-[var(--card-bg)] border-2 border-[var(--card-border)] rounded-[var(--radius-lg)] focus:outline-none focus:border-[var(--foreground)] transition-colors shadow-sm"
+                placeholder="마포구패션왕"
+                className="text-3xl sm:text-4xl pb-4 bg-transparent border-b-2 border-neutral-200 dark:border-neutral-800 focus:outline-none focus:border-[var(--foreground)] transition-colors placeholder:text-neutral-300 dark:placeholder:text-neutral-700 font-medium w-full"
                 autoFocus
                 onKeyDown={(e) => {
                     if (e.key === 'Enter' && isValid) onNext();
                 }}
             />
 
-            <div className="mt-12 flex justify-end">
+            <div className="mt-16 flex justify-end">
                 <button
                     onClick={onNext}
                     disabled={!isValid}
                     className={clsx(
-                        "flex items-center gap-2 px-8 py-4 rounded-full text-lg font-medium transition-all shadow-md",
-                        isValid ? "bg-[var(--foreground)] text-[var(--background)] hover:scale-105" : "bg-[var(--muted)] text-[var(--muted-foreground)] cursor-not-allowed hidden opacity-0"
+                        "group flex items-center gap-3 px-10 py-5 rounded-full text-lg font-medium transition-all duration-300 shadow-2xl",
+                        isValid ? "bg-[var(--foreground)] text-[var(--background)] hover:scale-[1.02]" : "bg-[var(--muted)] text-[var(--muted-foreground)] cursor-not-allowed opacity-0 translate-y-4"
                     )}
                 >
-                    계속하기 <ArrowRight size={20} />
+                    계속하기 <ArrowRight size={22} className={isValid ? "group-hover:translate-x-1 transition-transform" : ""} />
                 </button>
             </div>
         </motion.div>
@@ -168,21 +168,23 @@ function StepTwoPhysical({ profile, setProfile, onNext }: StepProps) {
 
     return (
         <motion.div variants={stepVariants} initial="hidden" animate="visible" exit="exit" className="flex flex-col h-full justify-center">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4">{profile.nickname}님의 스펙을 완성해주세요.</h2>
-            <p className="text-[var(--muted-foreground)] text-lg mb-10">완벽한 핏(Fit) 제안을 위해 마네킹 아바타를 세팅합니다.</p>
+            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-[-0.02em] mb-6 text-[var(--foreground)]">{profile.nickname}님의 스펙은?</h2>
+            <p className="text-[var(--muted-foreground)] text-lg sm:text-xl font-light mb-12">완벽한 핏(Fit) 제안을 위해 마네킹 아바타를 세팅합니다.</p>
 
-            <div className="grid gap-6 sm:grid-cols-2">
+            <div className="grid gap-8 sm:grid-cols-2">
                 {/* 성별 */}
-                <div className="flex flex-col gap-2">
-                    <label className="font-medium text-sm text-[var(--muted-foreground)]">성별</label>
-                    <div className="flex gap-2 bg-[var(--card-bg)] p-2 rounded-[var(--radius-lg)] border border-[var(--card-border)]">
+                <div className="flex flex-col gap-3">
+                    <label className="font-semibold text-sm uppercase tracking-wider text-[var(--muted-foreground)]">성별 (Gender)</label>
+                    <div className="flex gap-2">
                         {(["male", "female", "other"] as const).map((g) => (
                             <button
                                 key={g}
                                 onClick={() => setProfile({ ...profile, gender: g })}
                                 className={clsx(
-                                    "flex-1 py-3 px-4 rounded-[var(--radius-md)] text-center transition-all font-medium",
-                                    profile.gender === g ? "bg-[var(--foreground)] text-[var(--background)] shadow-md" : "hover:bg-[var(--muted)]"
+                                    "flex-1 py-4 px-2 rounded-full border transition-all font-medium text-[var(--foreground)]",
+                                    profile.gender === g
+                                        ? "bg-[var(--foreground)] text-[var(--background)] border-[var(--foreground)] shadow-lg"
+                                        : "bg-transparent border-neutral-200 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500"
                                 )}
                             >
                                 {g === "male" ? "남성" : g === "female" ? "여성" : "기타"}
@@ -192,52 +194,52 @@ function StepTwoPhysical({ profile, setProfile, onNext }: StepProps) {
                 </div>
 
                 {/* 나이 */}
-                <div className="flex flex-col gap-2">
-                    <label className="font-medium text-sm text-[var(--muted-foreground)]">나이</label>
+                <div className="flex flex-col gap-3">
+                    <label className="font-semibold text-sm uppercase tracking-wider text-[var(--muted-foreground)]">나이 (Age)</label>
                     <input
                         type="number"
-                        placeholder="세"
+                        placeholder="예) 25"
                         value={profile.age || ""}
                         onChange={(e) => setProfile({ ...profile, age: Number(e.target.value) })}
-                        className="p-4 px-6 text-lg bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--radius-lg)] focus:outline-none focus:border-[var(--foreground)] transition-colors"
+                        className="p-4 px-2 text-xl bg-transparent border-b-2 border-neutral-200 dark:border-neutral-800 focus:outline-none focus:border-[var(--foreground)] transition-colors placeholder:text-neutral-300 dark:placeholder:text-neutral-700 w-full"
                     />
                 </div>
 
                 {/* 키 */}
-                <div className="flex flex-col gap-2">
-                    <label className="font-medium text-sm text-[var(--muted-foreground)]">키 (cm)</label>
+                <div className="flex flex-col gap-3">
+                    <label className="font-semibold text-sm uppercase tracking-wider text-[var(--muted-foreground)]">키 (Height, cm)</label>
                     <input
                         type="number"
-                        placeholder="175"
+                        placeholder="예) 175"
                         value={profile.height || ""}
                         onChange={(e) => setProfile({ ...profile, height: Number(e.target.value) })}
-                        className="p-4 px-6 text-lg bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--radius-lg)] focus:outline-none focus:border-[var(--foreground)] transition-colors"
+                        className="p-4 px-2 text-xl bg-transparent border-b-2 border-neutral-200 dark:border-neutral-800 focus:outline-none focus:border-[var(--foreground)] transition-colors placeholder:text-neutral-300 dark:placeholder:text-neutral-700 w-full"
                     />
                 </div>
 
                 {/* 체중 */}
-                <div className="flex flex-col gap-2">
-                    <label className="font-medium text-sm text-[var(--muted-foreground)]">몸무게 (kg)</label>
+                <div className="flex flex-col gap-3">
+                    <label className="font-semibold text-sm uppercase tracking-wider text-[var(--muted-foreground)]">체중 (Weight, kg)</label>
                     <input
                         type="number"
-                        placeholder="70"
+                        placeholder="예) 70"
                         value={profile.weight || ""}
                         onChange={(e) => setProfile({ ...profile, weight: Number(e.target.value) })}
-                        className="p-4 px-6 text-lg bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--radius-lg)] focus:outline-none focus:border-[var(--foreground)] transition-colors"
+                        className="p-4 px-2 text-xl bg-transparent border-b-2 border-neutral-200 dark:border-neutral-800 focus:outline-none focus:border-[var(--foreground)] transition-colors placeholder:text-neutral-300 dark:placeholder:text-neutral-700 w-full"
                     />
                 </div>
             </div>
 
-            <div className="mt-12 flex justify-end">
+            <div className="mt-16 flex justify-end">
                 <button
                     onClick={onNext}
                     disabled={!isValid}
                     className={clsx(
-                        "flex items-center gap-2 px-8 py-4 rounded-full text-lg font-medium transition-all shadow-md",
-                        isValid ? "bg-[var(--foreground)] text-[var(--background)] hover:scale-105" : "bg-[var(--muted)] text-[var(--muted-foreground)] cursor-not-allowed opacity-50"
+                        "group flex items-center gap-3 px-10 py-5 rounded-full text-lg font-medium transition-all duration-300 shadow-2xl",
+                        isValid ? "bg-[var(--foreground)] text-[var(--background)] hover:scale-[1.02]" : "bg-[var(--muted)] text-[var(--muted-foreground)] cursor-not-allowed opacity-50"
                     )}
                 >
-                    다음 단계 <ArrowRight size={20} />
+                    다음 단계 <ArrowRight size={22} className={isValid ? "group-hover:translate-x-1 transition-transform" : ""} />
                 </button>
             </div>
         </motion.div>
@@ -248,39 +250,25 @@ function StepTwoPhysical({ profile, setProfile, onNext }: StepProps) {
 function StepThreeBodyFit({ profile, setProfile, onNext }: StepProps) {
     const isValid = profile.bodyShape && profile.preferredFit;
 
-    const shapes = [
-        { id: "broad_shoulder", label: "어깨발달형" },
-        { id: "skinny", label: "슬림형" },
-        { id: "sturdy_lower", label: "하체튼튼형" },
-        { id: "belly", label: "복부발달형" },
-        { id: "standard", label: "표준형" }
-    ] as const;
-
-    const fits = [
-        { id: "over_fit", label: "오버 핏" },
-        { id: "wide_fit", label: "와이드 핏" },
-        { id: "standard_fit", label: "스탠다드 핏" },
-        { id: "slim_fit", label: "슬림 핏" }
-    ] as const;
-
     return (
         <motion.div variants={stepVariants} initial="hidden" animate="visible" exit="exit" className="flex flex-col h-full justify-center">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4">옷태가 사는 비밀</h2>
-            <p className="text-[var(--muted-foreground)] text-lg mb-10">나의 특징을 감안해 최적의 실루엣을 제안해 드립니다.</p>
+            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-[-0.02em] mb-6 text-[var(--foreground)]">옷태가 사는 비밀</h2>
+            <p className="text-[var(--muted-foreground)] text-lg sm:text-xl font-light mb-12">나의 특징을 감안해 최적의 실루엣을 제안해 드립니다.</p>
 
-            <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-10">
+                {/* 체형 */}
                 <div>
-                    <h3 className="font-semibold mb-4 text-lg">나에 가까운 체형 특징은?</h3>
-                    <div className="flex flex-wrap gap-3">
-                        {shapes.map(s => (
+                    <h3 className="font-semibold mb-6 text-sm uppercase tracking-widest text-[var(--muted-foreground)]">1. 가장 가까운 체형 특징</h3>
+                    <div className="flex flex-wrap gap-4">
+                        {[{ id: "broad_shoulder", label: "어깨발달형" }, { id: "skinny", label: "슬림형" }, { id: "sturdy_lower", label: "하체튼튼형" }, { id: "belly", label: "복부발달형" }, { id: "standard", label: "표준형" }].map(s => (
                             <button
                                 key={s.id}
-                                onClick={() => setProfile({ ...profile, bodyShape: s.id })}
+                                onClick={() => setProfile({ ...profile, bodyShape: s.id as any })}
                                 className={clsx(
-                                    "px-5 py-3 rounded-full border transition-all font-medium",
+                                    "px-6 py-4 rounded-full border transition-all font-medium text-lg text-[var(--foreground)]",
                                     profile.bodyShape === s.id
-                                        ? "border-[var(--foreground)] bg-[var(--foreground)] text-[var(--background)] shadow-md"
-                                        : "border-[var(--card-border)] bg-[var(--card-bg)] hover:border-neutral-400"
+                                        ? "border-[var(--foreground)] bg-[var(--foreground)] text-[var(--background)] shadow-lg scale-[1.02]"
+                                        : "bg-transparent border-neutral-200 dark:border-neutral-800 hover:border-[var(--foreground)]"
                                 )}
                             >
                                 {s.label}
@@ -289,18 +277,19 @@ function StepThreeBodyFit({ profile, setProfile, onNext }: StepProps) {
                     </div>
                 </div>
 
+                {/* 핏 */}
                 <div>
-                    <h3 className="font-semibold mb-4 text-lg">평소 즐겨입는 핏(Fit)은?</h3>
-                    <div className="flex flex-wrap gap-3">
-                        {fits.map(f => (
+                    <h3 className="font-semibold mb-6 text-sm uppercase tracking-widest text-[var(--muted-foreground)]">2. 평소 즐겨입는 핏 (Fit)</h3>
+                    <div className="flex flex-wrap gap-4">
+                        {[{ id: "over_fit", label: "오버 핏" }, { id: "wide_fit", label: "와이드 핏" }, { id: "standard_fit", label: "스탠다드 핏" }, { id: "slim_fit", label: "슬림 핏" }].map(f => (
                             <button
                                 key={f.id}
-                                onClick={() => setProfile({ ...profile, preferredFit: f.id })}
+                                onClick={() => setProfile({ ...profile, preferredFit: f.id as any })}
                                 className={clsx(
-                                    "px-5 py-3 rounded-full border transition-all font-medium",
+                                    "px-6 py-4 rounded-full border transition-all font-medium text-lg text-[var(--foreground)]",
                                     profile.preferredFit === f.id
-                                        ? "border-[var(--foreground)] bg-[var(--foreground)] text-[var(--background)] shadow-md"
-                                        : "border-[var(--card-border)] bg-[var(--card-bg)] hover:border-neutral-400"
+                                        ? "border-[var(--foreground)] bg-[var(--foreground)] text-[var(--background)] shadow-lg scale-[1.02]"
+                                        : "bg-transparent border-neutral-200 dark:border-neutral-800 hover:border-[var(--foreground)]"
                                 )}
                             >
                                 {f.label}
@@ -310,16 +299,16 @@ function StepThreeBodyFit({ profile, setProfile, onNext }: StepProps) {
                 </div>
             </div>
 
-            <div className="mt-12 flex justify-end">
+            <div className="mt-16 flex justify-end">
                 <button
                     onClick={onNext}
                     disabled={!isValid}
                     className={clsx(
-                        "flex items-center gap-2 px-8 py-4 rounded-full text-lg font-medium transition-all shadow-md",
-                        isValid ? "bg-[var(--foreground)] text-[var(--background)] hover:scale-105" : "bg-[var(--muted)] text-[var(--muted-foreground)] cursor-not-allowed opacity-50"
+                        "group flex items-center gap-3 px-10 py-5 rounded-full text-lg font-medium transition-all duration-300 shadow-2xl",
+                        isValid ? "bg-[var(--foreground)] text-[var(--background)] hover:scale-[1.02]" : "bg-[var(--muted)] text-[var(--muted-foreground)] cursor-not-allowed opacity-50"
                     )}
                 >
-                    다음 <ArrowRight size={20} />
+                    다음 <ArrowRight size={22} className={isValid ? "group-hover:translate-x-1 transition-transform" : ""} />
                 </button>
             </div>
         </motion.div>
@@ -328,31 +317,24 @@ function StepThreeBodyFit({ profile, setProfile, onNext }: StepProps) {
 
 // 4. 온도 민감도
 function StepFourTemperament({ profile, setProfile, onNext }: StepProps) {
-    const options = [
-        { id: "cold_sensitive", label: "🧊 추위를 많이 타요" },
-        { id: "normal", label: "😌 보통이에요" },
-        { id: "heat_sensitive", label: "🔥 더위를 많이 타요" },
-    ] as const;
-
     return (
         <motion.div variants={stepVariants} initial="hidden" animate="visible" exit="exit" className="flex flex-col h-full justify-center">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4">계절 체감 지수</h2>
-            <p className="text-[var(--muted-foreground)] text-lg mb-10">같은 10도에도 입는 두께가 달라집니다.</p>
+            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-[-0.02em] mb-6 text-[var(--foreground)]">계절 체감 지수</h2>
+            <p className="text-[var(--muted-foreground)] text-lg sm:text-xl font-light mb-12">같은 10도 온도에도 입는 옷의 두께가 달라집니다.</p>
 
             <div className="flex flex-col gap-4">
-                {options.map(opt => (
+                {[{ id: "cold_sensitive", label: "❄️ 추위를 많이 타요" }, { id: "normal", label: "😌 보통이에요" }, { id: "heat_sensitive", label: "🔥 더위를 많이 타요" }].map(opt => (
                     <button
                         key={opt.id}
                         onClick={() => {
-                            setProfile({ ...profile, tempSensitivity: opt.id });
-                            // 자동 다음 넘어가기 (편의성)
-                            setTimeout(onNext, 300);
+                            setProfile({ ...profile, tempSensitivity: opt.id as any });
+                            setTimeout(onNext, 400); // 부드러운 전환
                         }}
                         className={clsx(
-                            "p-6 text-left rounded-[var(--radius-lg)] border transition-all text-xl font-medium flex items-center justify-between",
+                            "p-6 text-left rounded-3xl border transition-all text-xl font-medium flex items-center justify-between text-[var(--foreground)]",
                             profile.tempSensitivity === opt.id
-                                ? "border-[var(--foreground)] bg-[var(--foreground)] text-[var(--background)] shadow-lg scale-[1.02]"
-                                : "border-[var(--card-border)] bg-[var(--card-bg)] hover:bg-[var(--muted)]"
+                                ? "border-[var(--foreground)] bg-[var(--foreground)] text-[var(--background)] shadow-xl scale-[1.02]"
+                                : "bg-transparent border-neutral-200 dark:border-neutral-800 hover:border-[var(--foreground)]"
                         )}
                     >
                         {opt.label}
@@ -387,10 +369,11 @@ function StepFiveStyles({ profile, setProfile, onNext }: StepProps) {
 
     return (
         <motion.div variants={stepVariants} initial="hidden" animate="visible" exit="exit" className="flex flex-col h-full justify-center">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4">나의 무드 보드</h2>
-            <p className="text-[var(--muted-foreground)] text-lg mb-8">즐겨 입거나 도전하고 싶은 스타일을 선택해 주세요. (최대 5개)</p>
+            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-[-0.02em] mb-6 text-[var(--foreground)]">나의 무드 보드</h2>
+            <p className="text-[var(--muted-foreground)] text-lg sm:text-xl font-light mb-4">즐겨 입거나 도전하고 싶은 스타일을 선택해 주세요. (최대 5개)</p>
+            <p className="text-sm font-semibold tracking-widest uppercase mb-10 text-[var(--foreground)]">선택됨: {profile.favoriteStyles.length} / 5</p>
 
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-4">
                 {stylesList.map(style => {
                     const isSelected = profile.favoriteStyles.includes(style);
                     const isMaxedOut = profile.favoriteStyles.length >= 5 && !isSelected;
@@ -400,31 +383,31 @@ function StepFiveStyles({ profile, setProfile, onNext }: StepProps) {
                             onClick={() => toggleStyle(style)}
                             disabled={isMaxedOut}
                             className={clsx(
-                                "px-6 py-4 rounded-xl border-2 transition-all font-semibold text-lg",
+                                "px-8 py-4 rounded-full border transition-all font-semibold text-lg text-[var(--foreground)]",
                                 isSelected
-                                    ? "border-[var(--foreground)] bg-[var(--foreground)] text-[var(--background)] shadow-md"
+                                    ? "border-[var(--foreground)] bg-[var(--foreground)] text-[var(--background)] shadow-xl scale-[1.05]"
                                     : isMaxedOut
-                                        ? "border-[var(--card-border)] bg-[var(--card-bg)] opacity-30 cursor-not-allowed"
-                                        : "border-[var(--card-border)] bg-[var(--card-bg)] hover:border-neutral-400"
+                                        ? "border-neutral-200 dark:border-neutral-800 opacity-30 cursor-not-allowed"
+                                        : "bg-transparent border-neutral-200 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-500 hover:scale-[1.02]"
                             )}
                         >
-                            # {style}
+                            {style}
                         </button>
                     );
                 })}
             </div>
 
-            <div className="mt-12 flex justify-between items-end">
-                <p className="text-[var(--muted-foreground)] font-medium">선택됨: {profile.favoriteStyles.length} / 5</p>
+            <div className="mt-16 flex justify-end">
                 <button
                     onClick={onNext}
                     disabled={!isValid}
                     className={clsx(
-                        "flex items-center gap-2 px-10 py-5 rounded-full text-xl font-bold transition-all shadow-[0_8px_30px_rgb(0,0,0,0.12)]",
-                        isValid ? "bg-[var(--accent)] text-[var(--accent-foreground)] hover:scale-105" : "bg-[var(--muted)] text-[var(--muted-foreground)] cursor-not-allowed hidden opacity-0"
+                        "group flex items-center gap-3 px-12 py-6 rounded-full text-xl font-bold transition-all duration-500 shadow-2xl",
+                        isValid ? "bg-[var(--foreground)] text-[var(--background)] hover:scale-[1.03]" : "bg-[var(--muted)] text-[var(--muted-foreground)] cursor-not-allowed opacity-0 translate-y-4"
                     )}
                 >
-                    내 옷장 시작하기 <Sparkles size={24} />
+                    <Sparkles size={24} className={isValid ? "group-hover:rotate-12 transition-transform" : ""} />
+                    내 옷장 시작하기
                 </button>
             </div>
         </motion.div>
