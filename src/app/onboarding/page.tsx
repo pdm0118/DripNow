@@ -131,15 +131,15 @@ function StepOneNickname({ profile, setProfile, onNext }: StepProps) {
 
     return (
         <motion.div variants={stepVariants} initial="hidden" animate="visible" exit="exit" className="flex flex-col h-full justify-center">
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-[-0.02em] mb-6 text-[var(--foreground)]">어떻게 불러드릴까요?</h2>
-            <p className="text-[var(--muted-foreground)] text-lg sm:text-xl font-light mb-12">DripNow에서 사용할 멋진 닉네임을 정해주세요.</p>
+            <h2 className="text-5xl sm:text-6xl lg:text-7xl font-serif italic tracking-tight mb-6 text-[var(--foreground)]">Your Name</h2>
+            <p className="text-neutral-400 text-sm tracking-widest uppercase font-medium mb-16">DripNow에서 사용할 멋진 닉네임을 정해주세요.</p>
 
             <input
                 type="text"
                 value={profile.nickname}
                 onChange={(e) => setProfile({ ...profile, nickname: e.target.value })}
-                placeholder="마포구패션왕"
-                className="text-3xl sm:text-4xl pb-4 bg-transparent border-b-2 border-neutral-200 dark:border-neutral-800 focus:outline-none focus:border-[var(--foreground)] transition-colors placeholder:text-neutral-300 dark:placeholder:text-neutral-700 font-medium w-full"
+                placeholder="Name"
+                className="text-4xl sm:text-5xl pb-4 bg-transparent border-b border-neutral-200 dark:border-neutral-800 focus:outline-none focus:border-[var(--foreground)] transition-colors placeholder:text-neutral-300 dark:placeholder:text-neutral-800 font-serif w-full"
                 autoFocus
                 onKeyDown={(e) => {
                     if (e.key === 'Enter' && isValid) onNext();
@@ -151,11 +151,11 @@ function StepOneNickname({ profile, setProfile, onNext }: StepProps) {
                     onClick={onNext}
                     disabled={!isValid}
                     className={clsx(
-                        "group flex items-center gap-3 px-10 py-5 rounded-full text-lg font-medium transition-all duration-300 shadow-2xl",
-                        isValid ? "bg-[var(--foreground)] text-[var(--background)] hover:scale-[1.02]" : "bg-[var(--muted)] text-[var(--muted-foreground)] cursor-not-allowed opacity-0 translate-y-4"
+                        "group flex items-center gap-4 px-10 py-5 bg-transparent text-[var(--foreground)] text-xs font-bold tracking-[0.2em] uppercase transition-all duration-300 border border-[var(--foreground)] hover:bg-[var(--foreground)] hover:text-[var(--background)]",
+                        isValid ? "opacity-100" : "opacity-0 translate-y-4 pointer-events-none"
                     )}
                 >
-                    계속하기 <ArrowRight size={22} className={isValid ? "group-hover:translate-x-1 transition-transform" : ""} />
+                    Continue <ArrowRight size={18} strokeWidth={1.5} className={isValid ? "group-hover:translate-x-1 transition-transform" : ""} />
                 </button>
             </div>
         </motion.div>
@@ -168,8 +168,8 @@ function StepTwoPhysical({ profile, setProfile, onNext }: StepProps) {
 
     return (
         <motion.div variants={stepVariants} initial="hidden" animate="visible" exit="exit" className="flex flex-col h-full justify-center">
-            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-[-0.02em] mb-6 text-[var(--foreground)]">{profile.nickname}님의 스펙은?</h2>
-            <p className="text-[var(--muted-foreground)] text-lg sm:text-xl font-light mb-12">완벽한 핏(Fit) 제안을 위해 마네킹 아바타를 세팅합니다.</p>
+            <h2 className="text-4xl sm:text-6xl font-serif italic tracking-tight mb-6 text-[var(--foreground)]">Dimensions</h2>
+            <p className="text-neutral-400 text-sm tracking-widest uppercase font-medium mb-12">완벽한 핏 제안을 위해 프로필을 세팅합니다.</p>
 
             <div className="grid gap-8 sm:grid-cols-2">
                 {/* 성별 */}
@@ -235,11 +235,11 @@ function StepTwoPhysical({ profile, setProfile, onNext }: StepProps) {
                     onClick={onNext}
                     disabled={!isValid}
                     className={clsx(
-                        "group flex items-center gap-3 px-10 py-5 rounded-full text-lg font-medium transition-all duration-300 shadow-2xl",
-                        isValid ? "bg-[var(--foreground)] text-[var(--background)] hover:scale-[1.02]" : "bg-[var(--muted)] text-[var(--muted-foreground)] cursor-not-allowed opacity-50"
+                        "group flex items-center gap-4 px-10 py-5 transition-all duration-300 border border-[var(--foreground)] text-xs font-bold tracking-[0.2em] uppercase",
+                        isValid ? "bg-transparent text-[var(--foreground)] hover:bg-[var(--foreground)] hover:text-[var(--background)]" : "bg-transparent text-neutral-300 border-neutral-200 cursor-not-allowed"
                     )}
                 >
-                    다음 단계 <ArrowRight size={22} className={isValid ? "group-hover:translate-x-1 transition-transform" : ""} />
+                    Next Step <ArrowRight size={18} strokeWidth={1.5} className={isValid ? "group-hover:translate-x-1 transition-transform" : ""} />
                 </button>
             </div>
         </motion.div>
@@ -252,8 +252,8 @@ function StepThreeBodyFit({ profile, setProfile, onNext }: StepProps) {
 
     return (
         <motion.div variants={stepVariants} initial="hidden" animate="visible" exit="exit" className="flex flex-col h-full justify-center">
-            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-[-0.02em] mb-6 text-[var(--foreground)]">옷태가 사는 비밀</h2>
-            <p className="text-[var(--muted-foreground)] text-lg sm:text-xl font-light mb-12">나의 특징을 감안해 최적의 실루엣을 제안해 드립니다.</p>
+            <h2 className="text-4xl sm:text-6xl font-serif italic tracking-tight mb-6 text-[var(--foreground)]">Silhouette</h2>
+            <p className="text-neutral-400 text-sm tracking-widest uppercase font-medium mb-12">나의 특징을 감안해 최적의 실루엣을 제안해 드립니다.</p>
 
             <div className="flex flex-col gap-10">
                 {/* 체형 */}
@@ -304,11 +304,11 @@ function StepThreeBodyFit({ profile, setProfile, onNext }: StepProps) {
                     onClick={onNext}
                     disabled={!isValid}
                     className={clsx(
-                        "group flex items-center gap-3 px-10 py-5 rounded-full text-lg font-medium transition-all duration-300 shadow-2xl",
-                        isValid ? "bg-[var(--foreground)] text-[var(--background)] hover:scale-[1.02]" : "bg-[var(--muted)] text-[var(--muted-foreground)] cursor-not-allowed opacity-50"
+                        "group flex items-center gap-4 px-10 py-5 transition-all duration-300 border border-[var(--foreground)] text-xs font-bold tracking-[0.2em] uppercase",
+                        isValid ? "bg-transparent text-[var(--foreground)] hover:bg-[var(--foreground)] hover:text-[var(--background)]" : "bg-transparent text-neutral-300 border-neutral-200 cursor-not-allowed"
                     )}
                 >
-                    다음 <ArrowRight size={22} className={isValid ? "group-hover:translate-x-1 transition-transform" : ""} />
+                    Next Step <ArrowRight size={18} strokeWidth={1.5} className={isValid ? "group-hover:translate-x-1 transition-transform" : ""} />
                 </button>
             </div>
         </motion.div>
@@ -319,11 +319,11 @@ function StepThreeBodyFit({ profile, setProfile, onNext }: StepProps) {
 function StepFourTemperament({ profile, setProfile, onNext }: StepProps) {
     return (
         <motion.div variants={stepVariants} initial="hidden" animate="visible" exit="exit" className="flex flex-col h-full justify-center">
-            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-[-0.02em] mb-6 text-[var(--foreground)]">계절 체감 지수</h2>
-            <p className="text-[var(--muted-foreground)] text-lg sm:text-xl font-light mb-12">같은 10도 온도에도 입는 옷의 두께가 달라집니다.</p>
+            <h2 className="text-4xl sm:text-6xl font-serif italic tracking-tight mb-6 text-[var(--foreground)]">Thermal Profile</h2>
+            <p className="text-neutral-400 text-sm tracking-widest uppercase font-medium mb-12">같은 온도라도 입는 옷의 두께가 달라집니다.</p>
 
             <div className="flex flex-col gap-4">
-                {[{ id: "cold_sensitive", label: "❄️ 추위를 많이 타요" }, { id: "normal", label: "😌 보통이에요" }, { id: "heat_sensitive", label: "🔥 더위를 많이 타요" }].map(opt => (
+                {[{ id: "cold_sensitive", label: "추위를 많이 타요" }, { id: "normal", label: "보통이에요" }, { id: "heat_sensitive", label: "더위를 많이 타요" }].map(opt => (
                     <button
                         key={opt.id}
                         onClick={() => {
@@ -369,9 +369,9 @@ function StepFiveStyles({ profile, setProfile, onNext }: StepProps) {
 
     return (
         <motion.div variants={stepVariants} initial="hidden" animate="visible" exit="exit" className="flex flex-col h-full justify-center">
-            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-[-0.02em] mb-6 text-[var(--foreground)]">나의 무드 보드</h2>
-            <p className="text-[var(--muted-foreground)] text-lg sm:text-xl font-light mb-4">즐겨 입거나 도전하고 싶은 스타일을 선택해 주세요. (최대 5개)</p>
-            <p className="text-sm font-semibold tracking-widest uppercase mb-10 text-[var(--foreground)]">선택됨: {profile.favoriteStyles.length} / 5</p>
+            <h2 className="text-4xl sm:text-6xl font-serif italic tracking-tight mb-6 text-[var(--foreground)]">Aesthetic</h2>
+            <p className="text-neutral-400 text-sm tracking-widest uppercase font-medium mb-4">즐겨 입거나 도전하고 싶은 스타일을 선택해 주세요. (최대 5개)</p>
+            <p className="text-xs font-bold tracking-[0.2em] uppercase mb-10 text-[var(--foreground)] border-b border-neutral-100 dark:border-neutral-900 pb-4 inline-block">Selected: {profile.favoriteStyles.length} / 5</p>
 
             <div className="flex flex-wrap gap-4">
                 {stylesList.map(style => {
@@ -402,12 +402,12 @@ function StepFiveStyles({ profile, setProfile, onNext }: StepProps) {
                     onClick={onNext}
                     disabled={!isValid}
                     className={clsx(
-                        "group flex items-center gap-3 px-12 py-6 rounded-full text-xl font-bold transition-all duration-500 shadow-2xl",
-                        isValid ? "bg-[var(--foreground)] text-[var(--background)] hover:scale-[1.03]" : "bg-[var(--muted)] text-[var(--muted-foreground)] cursor-not-allowed opacity-0 translate-y-4"
+                        "group flex items-center gap-4 px-12 py-6 border border-[var(--foreground)] text-[var(--background)] bg-[var(--foreground)] text-xs font-bold tracking-[0.2em] uppercase transition-all duration-500",
+                        isValid ? "opacity-100 hover:bg-neutral-800" : "opacity-0 translate-y-4 pointer-events-none"
                     )}
                 >
-                    <Sparkles size={24} className={isValid ? "group-hover:rotate-12 transition-transform" : ""} />
-                    내 옷장 시작하기
+                    <Sparkles size={16} strokeWidth={1.5} className={isValid ? "group-hover:rotate-12 transition-transform" : ""} />
+                    Enter Wardrobe
                 </button>
             </div>
         </motion.div>

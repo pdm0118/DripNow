@@ -32,67 +32,66 @@ export default function WardrobePage() {
         <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] font-sans relative overflow-x-hidden pt-12 pb-32">
 
             {/* Header */}
-            <header className="px-6 sm:px-12 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+            <header className="px-6 sm:px-12 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
                 <div>
-                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-[-0.03em] mb-2 text-[var(--foreground)]">내 옷장</h1>
-                    <p className="text-neutral-500 font-medium text-lg">완벽한 코디를 위한 당신만의 컬렉션 (총 {wardrobe.length}벌)</p>
+                    <h1 className="text-4xl sm:text-5xl lg:text-7xl font-serif italic tracking-tight mb-2 text-[var(--foreground)]">Wardrobe</h1>
+                    <p className="text-neutral-500 font-light text-lg tracking-wide uppercase text-sm mt-4">완벽한 코디를 위한 당신만의 컬렉션 (총 {wardrobe.length}벌)</p>
                 </div>
 
                 {/* Search & Filter */}
                 <div className="flex items-center gap-3">
-                    <div className="relative group flex-1 md:w-64">
-                        <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-[var(--foreground)] transition-colors" />
+                    <div className="relative group flex-1 md:w-72">
+                        <Search size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-[var(--foreground)] transition-colors" />
                         <input
                             type="text"
-                            placeholder="아이템 검색..."
-                            className="w-full pl-12 pr-4 py-4 rounded-full bg-[var(--card-bg)] border border-[var(--card-border)] focus:outline-none focus:border-[var(--foreground)] transition-colors text-[var(--foreground)] placeholder:text-neutral-400 font-medium"
+                            placeholder="Find an item..."
+                            className="w-full pl-14 pr-6 py-4 rounded-full bg-neutral-50 dark:bg-neutral-900/50 border border-transparent focus:bg-transparent focus:border-neutral-200 dark:focus:border-neutral-800 transition-all text-[var(--foreground)] placeholder:text-neutral-400 font-medium text-sm outline-none"
                         />
                     </div>
-                    <button className="w-14 h-14 rounded-full bg-[var(--card-bg)] border border-[var(--card-border)] flex items-center justify-center hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors shrink-0">
-                        <Settings2 size={24} className="text-[var(--foreground)]" />
-                    </button>
                 </div>
             </header>
 
             <main className="max-w-7xl mx-auto px-6 sm:px-12">
 
-                {/* Category Tabs */}
-                <div className="flex gap-2 mb-10 overflow-x-auto scrollbar-hide pb-2">
+                {/* Category Tabs - Elegant minimal design */}
+                <div className="flex gap-6 mb-12 overflow-x-auto scrollbar-hide pb-2 border-b border-neutral-100 dark:border-neutral-900">
                     {TABS.map(tab => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={clsx(
-                                "px-6 py-3 rounded-full border transition-all font-semibold tracking-wide whitespace-nowrap",
+                                "pb-4 transition-all font-medium text-sm tracking-widest uppercase whitespace-nowrap relative",
                                 activeTab === tab.id
-                                    ? "bg-[var(--foreground)] text-[var(--background)] border-[var(--foreground)] shadow-lg"
-                                    : "bg-transparent border-neutral-200 dark:border-neutral-800 text-neutral-500 hover:text-[var(--foreground)] hover:border-neutral-400"
+                                    ? "text-[var(--foreground)]"
+                                    : "text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
                             )}
                         >
                             {tab.label}
+                            {activeTab === tab.id && (
+                                <motion.div
+                                    layoutId="tab-indicator"
+                                    className="absolute bottom-0 left-0 w-full h-[1px] bg-[var(--foreground)]"
+                                />
+                            )}
                         </button>
                     ))}
                 </div>
 
                 {/* Grid Layout */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 gap-y-10">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-6 gap-y-12">
 
                     {/* Items */}
                     {filteredItems.map((item) => (
                         <div key={item.id} className="group cursor-pointer">
-                            <div className="aspect-[3/4] rounded-3xl bg-neutral-100 dark:bg-neutral-900 mb-4 overflow-hidden relative border border-[var(--card-border)] group-hover:border-neutral-300 dark:group-hover:border-neutral-700 transition-colors flex items-center justify-center">
+                            <div className="aspect-[3/4] bg-neutral-50 dark:bg-neutral-900/40 mb-5 overflow-hidden relative flex items-center justify-center transition-all group-hover:bg-neutral-100 dark:group-hover:bg-neutral-800/60">
                                 {/* Visual Placeholder */}
-                                <div className="text-neutral-300 dark:text-neutral-700 p-8 text-center group-hover:scale-105 transition-transform duration-500">
-                                    <ImageIcon size={48} className="mx-auto mb-2 opacity-50" />
-                                    <p className="text-xs font-mono uppercase tracking-widest opacity-50">No Image</p>
+                                <div className="text-neutral-300 dark:text-neutral-700 p-8 text-center group-hover:scale-105 transition-transform duration-700 ease-out">
+                                    <ImageIcon size={32} strokeWidth={1} className="mx-auto mb-3 opacity-40" />
                                 </div>
-
-                                {/* Hover Overlay Actions */}
-                                <div className="absolute inset-0 bg-black/5 dark:bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                             </div>
                             <div>
-                                <h3 className="text-lg font-bold truncate mb-1 text-[var(--foreground)] group-hover:text-black dark:group-hover:text-white transition-colors">{item.name}</h3>
-                                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                                <h3 className="text-md font-medium truncate mb-1 text-[var(--foreground)] group-hover:opacity-70 transition-opacity">{item.name}</h3>
+                                <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400">
                                     <span>{item.category}</span>
                                     <span>•</span>
                                     <span>{item.color}</span>
@@ -104,17 +103,19 @@ export default function WardrobePage() {
 
                 {/* Empty State / Add First Item Prompt (Visible if no items) */}
                 {wardrobe.length === 0 && (
-                    <div className="flex flex-col items-center justify-center py-32 text-center">
-                        <div className="w-24 h-24 bg-neutral-100 dark:bg-neutral-900 rounded-full flex items-center justify-center mb-6">
-                            <Sparkles size={40} className="text-neutral-400" />
+                    <div className="flex flex-col items-center justify-center py-40 text-center">
+                        <div className="mb-8">
+                            <Sparkles size={32} strokeWidth={1} className="text-neutral-300 mx-auto" />
                         </div>
-                        <h2 className="text-3xl font-bold tracking-tight mb-4">옷장이 아직 비어있네요</h2>
-                        <p className="text-neutral-500 text-lg mb-8 max-w-md mx-auto leading-relaxed">자주 입는 옷부터 하나씩 등록해보세요. DripNow가 찰떡같은 코디를 제안해드립니다.</p>
+                        <h2 className="text-4xl font-serif italic mb-6">Your Collection is Empty</h2>
+                        <p className="text-neutral-500 text-sm tracking-wide uppercase mb-12 max-w-sm mx-auto leading-relaxed">
+                            Start building your digital wardrobe by adding your first piece.
+                        </p>
                         <button
                             onClick={() => setIsAddMenuOpen(true)}
-                            className="px-8 py-4 bg-[var(--foreground)] text-[var(--background)] rounded-full text-lg font-bold shadow-xl hover:scale-[1.03] transition-transform flex items-center gap-2"
+                            className="px-10 py-4 bg-[var(--foreground)] text-[var(--background)] rounded-none text-sm font-bold tracking-widest uppercase hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors flex items-center gap-3"
                         >
-                            <Plus size={24} /> 첫 번째 옷 등록하기
+                            <Plus size={16} /> Add Item
                         </button>
                     </div>
                 )}
@@ -125,29 +126,29 @@ export default function WardrobePage() {
                 <AnimatePresence>
                     {isAddMenuOpen && (
                         <motion.div
-                            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
                             transition={{ duration: 0.2 }}
-                            className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-3 shadow-[0_20px_40px_rgb(0,0,0,0.12)] dark:shadow-[0_20px_40px_rgb(255,255,255,0.05)] flex flex-col gap-2 origin-bottom-right"
+                            className="bg-[var(--background)] shadow-2xl border border-neutral-100 dark:border-neutral-900 p-2 flex flex-col gap-1 origin-bottom-right rounded-none mb-4"
                         >
-                            <Link href="/wardrobe/add-url" className="flex items-center gap-3 px-6 py-4 rounded-2xl hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors font-semibold group">
-                                <span className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                    <Link2 size={20} />
+                            <Link href="/wardrobe/add-url" className="flex items-center gap-4 px-6 py-4 hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors group">
+                                <span className="text-neutral-400 group-hover:text-[var(--foreground)] transition-colors">
+                                    <Link2 size={18} strokeWidth={1.5} />
                                 </span>
-                                쇼핑몰 링크로 자동 등록
+                                <span className="font-medium text-sm tracking-wide">Import via Link</span>
                             </Link>
-                            <Link href="/wardrobe/add-photo" className="flex items-center gap-3 px-6 py-4 rounded-2xl hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors font-semibold group">
-                                <span className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                    <ImageIcon size={20} />
+                            <Link href="/wardrobe/add-photo" className="flex items-center gap-4 px-6 py-4 hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors group">
+                                <span className="text-neutral-400 group-hover:text-[var(--foreground)] transition-colors">
+                                    <ImageIcon size={18} strokeWidth={1.5} />
                                 </span>
-                                사진 찍어 AI가 분류하기
+                                <span className="font-medium text-sm tracking-wide">Analyze Photo</span>
                             </Link>
-                            <Link href="/wardrobe/add-manual" className="flex items-center gap-3 px-6 py-4 rounded-2xl hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors font-semibold group border-t border-[var(--card-border)] mt-2 pt-4">
-                                <span className="w-10 h-10 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                    <Type size={20} />
+                            <Link href="/wardrobe/add-manual" className="flex items-center gap-4 px-6 py-4 hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors group border-t border-neutral-100 dark:border-neutral-900 mt-1 pt-3">
+                                <span className="text-neutral-400 group-hover:text-[var(--foreground)] transition-colors">
+                                    <Type size={18} strokeWidth={1.5} />
                                 </span>
-                                텍스트로 직접 입력
+                                <span className="font-medium text-sm tracking-wide">Manual Entry</span>
                             </Link>
                         </motion.div>
                     )}

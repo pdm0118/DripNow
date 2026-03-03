@@ -121,43 +121,49 @@ export default function DashboardPage() {
     return (
         <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] font-sans relative overflow-x-hidden">
             {/* Header: Date, Weather, Location */}
-            <header className="pt-12 pb-6 px-6 sm:px-12 max-w-5xl mx-auto flex items-end justify-between">
+            <header className="pt-12 pb-6 px-6 sm:px-12 max-w-5xl mx-auto flex items-end justify-between border-b border-neutral-100 dark:border-neutral-900 mb-8">
                 <div>
-                    <h1 className="text-4xl sm:text-5xl font-extrabold tracking-[-0.03em] mb-2 text-[var(--foreground)]">오늘 뭐 입지?</h1>
-                    <div className="flex items-center gap-2 text-neutral-500 font-medium">
-                        <MapPin size={16} />
+                    <h1 className="text-4xl sm:text-6xl font-serif italic tracking-tight mb-2 text-[var(--foreground)]">Curation</h1>
+                    <div className="flex items-center gap-2 text-neutral-400 font-medium text-xs tracking-widest uppercase">
+                        <MapPin size={14} />
                         <span>Seoul, Gangnam</span>
                     </div>
                 </div>
                 <div className="flex flex-col items-end">
-                    <div className="flex items-center gap-2 text-2xl font-bold tracking-tight">
-                        <CloudSun size={28} className="text-[var(--foreground)]" />
+                    <div className="flex items-center gap-3 text-3xl font-light tracking-tight">
+                        <CloudSun size={32} strokeWidth={1} className="text-[var(--foreground)]" />
                         22°
                     </div>
-                    <div className="flex items-center gap-3 text-sm text-neutral-500 mt-1">
-                        <span className="flex items-center gap-1"><Wind size={14} /> 3m/s</span>
-                        <span className="flex items-center gap-1"><Droplets size={14} /> 10%</span>
+                    <div className="flex items-center gap-4 text-xs font-medium tracking-widest uppercase text-neutral-400 mt-2">
+                        <span className="flex items-center gap-1"><Wind size={12} /> 3m/s</span>
+                        <span className="flex items-center gap-1"><Droplets size={12} /> 10%</span>
                     </div>
                 </div>
             </header>
 
             <main className="max-w-5xl mx-auto px-6 sm:px-12 pb-40">
                 {/* TPO Selection */}
-                <section className="mb-10">
-                    <p className="text-sm font-semibold tracking-widest uppercase mb-4 text-[var(--muted-foreground)]">Occasion</p>
-                    <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+                <section className="mb-12">
+                    <p className="text-xs font-bold tracking-[0.2em] uppercase mb-6 text-neutral-400">Occasion</p>
+                    <div className="flex gap-6 overflow-x-auto scrollbar-hide pb-2">
                         {TPOs.map(t => (
                             <button
                                 key={t.id}
                                 onClick={() => { setTpo(t.id); }}
                                 className={clsx(
-                                    "px-6 py-3 rounded-full border transition-all font-medium whitespace-nowrap",
+                                    "pb-2 transition-all font-medium text-sm tracking-widest uppercase whitespace-nowrap relative",
                                     tpo === t.id
-                                        ? "bg-[var(--foreground)] text-[var(--background)] border-[var(--foreground)] shadow-lg"
-                                        : "bg-transparent border-neutral-200 dark:border-neutral-800 text-[var(--foreground)] hover:border-neutral-400"
+                                        ? "text-[var(--foreground)]"
+                                        : "text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
                                 )}
                             >
                                 {t.label}
+                                {tpo === t.id && (
+                                    <motion.div
+                                        layoutId="tpo-indicator"
+                                        className="absolute bottom-0 left-0 w-full h-[1px] bg-[var(--foreground)]"
+                                    />
+                                )}
                             </button>
                         ))}
                     </div>
@@ -166,72 +172,72 @@ export default function DashboardPage() {
                 {/* Outfit Presentation Area */}
                 <section className="relative">
                     {wardrobe.length === 0 ? (
-                        <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[2rem] p-12 text-center shadow-sm flex flex-col items-center justify-center min-h-[500px]">
-                            <h2 className="text-3xl font-bold mb-4">옷장이 비어있습니다</h2>
-                            <p className="text-neutral-500 mb-8 max-w-md mx-auto text-lg leading-relaxed">
-                                완벽한 코디 추천을 위해 옷장에 보유하고 있는 옷을 먼저 등록해주세요.
+                        <div className="border border-neutral-100 dark:border-neutral-900 bg-neutral-50/50 dark:bg-neutral-900/20 p-12 text-center flex flex-col items-center justify-center min-h-[500px]">
+                            <h2 className="text-3xl font-serif italic mb-4">Wardrobe Empty</h2>
+                            <p className="text-neutral-500 mb-8 max-w-sm mx-auto text-sm tracking-wide leading-relaxed uppercase">
+                                완벽한 코디 추천을 위해 옷장에 옷을 먼저 등록해주세요.
                             </p>
-                            <Link href="/wardrobe" className="px-8 py-4 bg-[var(--foreground)] text-[var(--background)] rounded-full text-lg font-bold hover:scale-[1.02] transition-transform shadow-xl flex items-center gap-2">
-                                <Plus size={24} /> 옷장으로 이동하기
+                            <Link href="/wardrobe" className="px-10 py-4 bg-[var(--foreground)] text-[var(--background)] text-xs font-bold tracking-[0.2em] uppercase hover:bg-neutral-800 transition-colors flex items-center gap-3">
+                                <Plus size={16} /> 옷장으로 이동
                             </Link>
                         </div>
                     ) : activePreset ? (
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={activePreset.id}
-                                initial={{ opacity: 0, scale: 0.98, x: 20 }}
-                                animate={{ opacity: 1, scale: 1, x: 0 }}
-                                exit={{ opacity: 0, scale: 0.98, x: -20 }}
-                                transition={{ duration: 0.4, ease: "easeOut" }}
-                                className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[2rem] p-6 sm:p-10 shadow-sm flex flex-col md:flex-row gap-8 lg:gap-16"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                                className="flex flex-col md:flex-row gap-12 lg:gap-24 items-center"
                             >
                                 {/* Avatar / Visual Placeholder container */}
-                                <div className="flex-1 aspect-[3/4] md:aspect-auto md:h-[600px] rounded-3xl bg-neutral-100 dark:bg-neutral-900 flex items-center justify-center relative overflow-hidden group">
-                                    <span className="absolute top-6 right-6 bg-black/5 dark:bg-white/10 backdrop-blur-md px-5 py-2 rounded-full text-sm font-bold tracking-wider z-10 shadow-sm">
-                                        적합도 {activePreset.matchRate}%
+                                <div className="w-full md:flex-1 aspect-[3/4] md:h-[700px] bg-neutral-50 dark:bg-neutral-900/40 flex items-center justify-center relative overflow-hidden group border border-neutral-100 dark:border-neutral-900">
+                                    <span className="absolute top-6 right-6 font-mono text-xs tracking-widest uppercase z-10 text-neutral-400">
+                                        Match {activePreset.matchRate}%
                                     </span>
                                     {/* Luxury Placeholder graphic */}
-                                    <div className="w-32 h-64 sm:w-48 sm:h-96 border-4 border-dashed border-neutral-300 dark:border-neutral-700 rounded-t-full rounded-b-xl flex items-center justify-center opacity-70 group-hover:opacity-100 transition-opacity">
-                                        <p className="text-neutral-400 rotate-90 font-mono tracking-widest uppercase">My Avatar</p>
+                                    <div className="w-32 h-64 sm:w-48 sm:h-96 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center opacity-50 group-hover:opacity-100 transition-opacity bg-white dark:bg-black shadow-2xl">
+                                        <p className="text-neutral-400 rotate-90 font-mono tracking-widest uppercase text-xs">Lookbook</p>
                                     </div>
                                 </div>
 
                                 {/* Preset Info & Item List */}
-                                <div className="flex-1 flex flex-col justify-center">
-                                    <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.02em] mb-3">{activePreset.name}</h2>
-                                    <p className="text-neutral-500 mb-8 font-light text-lg">기온과 선호하는 핏에 최적화된 조합입니다.</p>
+                                <div className="w-full md:flex-1 flex flex-col justify-center py-8">
+                                    <h2 className="text-4xl sm:text-5xl font-serif italic mb-4 text-[var(--foreground)]">{activePreset.name}</h2>
+                                    <p className="text-neutral-400 mb-12 font-medium text-xs tracking-[0.2em] uppercase">Today's Protocol</p>
 
-                                    <div className="space-y-3 flex-1">
+                                    <div className="space-y-6 flex-1 mb-12">
                                         {activePreset.items.length > 0 ? activePreset.items.map((item) => (
-                                            <div key={item.id} className="group flex items-center justify-between p-4 rounded-2xl border border-transparent hover:border-neutral-200 dark:hover:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-900/50 transition-all">
+                                            <div key={item.id} className="group flex items-center justify-between border-b border-neutral-100 dark:border-neutral-900 pb-4 hover:border-[var(--foreground)] transition-colors">
                                                 <div>
-                                                    <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-neutral-400 mb-1">{item.type}</p>
-                                                    <p className="text-lg font-medium">{item.name}</p>
+                                                    <p className="text-[9px] font-bold tracking-[0.3em] uppercase text-neutral-400 mb-2">{item.type}</p>
+                                                    <p className="text-sm font-medium tracking-wide">{item.name}</p>
                                                 </div>
                                                 <button
                                                     onClick={() => handleSwap(item.id, item.rawCategory)}
                                                     disabled={swappingItem === item.id}
-                                                    className="w-12 h-12 rounded-full border border-neutral-200 dark:border-neutral-800 bg-[var(--card-bg)] flex items-center justify-center text-[var(--foreground)] hover:bg-[var(--foreground)] hover:text-[var(--background)] transition-colors shrink-0 disabled:opacity-50"
-                                                    title="다른 옷으로 변경 (세탁중 버튼 대용)"
+                                                    className="text-neutral-300 hover:text-[var(--foreground)] transition-colors disabled:opacity-50"
+                                                    title="Swap Item"
                                                 >
-                                                    <RefreshCw size={18} className={clsx(swappingItem === item.id && "animate-spin")} />
+                                                    <RefreshCw size={18} strokeWidth={1.5} className={clsx(swappingItem === item.id && "animate-spin")} />
                                                 </button>
                                             </div>
                                         )) : (
-                                            <div className="p-4 text-neutral-500 italic">추천할 수 있는 옷의 조합이 부족합니다.</div>
+                                            <div className="text-neutral-400 italic text-sm">Not enough items</div>
                                         )}
                                     </div>
 
-                                    <div className="pt-10 flex items-center justify-between">
-                                        <div className="flex gap-2">
-                                            <button onClick={prevPreset} disabled={currentPresetIndex === 0} className="w-14 h-14 rounded-full border border-neutral-200 dark:border-neutral-800 flex items-center justify-center hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
-                                                <ChevronLeft size={24} />
+                                    <div className="flex items-center justify-between border-t border-neutral-100 dark:border-neutral-900 pt-8">
+                                        <div className="flex gap-6">
+                                            <button onClick={prevPreset} disabled={currentPresetIndex === 0} className="text-neutral-400 hover:text-[var(--foreground)] transition-colors disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-2 text-xs font-bold tracking-widest uppercase">
+                                                <ChevronLeft size={16} /> Prev
                                             </button>
-                                            <button onClick={nextPreset} disabled={currentPresetIndex === renderedPresets.length - 1} className="w-14 h-14 rounded-full border border-neutral-200 dark:border-neutral-800 flex items-center justify-center hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
-                                                <ChevronRight size={24} />
+                                            <button onClick={nextPreset} disabled={currentPresetIndex === renderedPresets.length - 1} className="text-neutral-400 hover:text-[var(--foreground)] transition-colors disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-2 text-xs font-bold tracking-widest uppercase">
+                                                Next <ChevronRight size={16} />
                                             </button>
                                         </div>
-                                        <span className="text-neutral-400 font-mono text-sm tracking-widest">{currentPresetIndex + 1} / {renderedPresets.length}</span>
+                                        <span className="text-neutral-300 font-mono text-xs tracking-widest">{currentPresetIndex + 1} / {renderedPresets.length}</span>
                                     </div>
                                 </div>
                             </motion.div>
@@ -256,9 +262,9 @@ export default function DashboardPage() {
                     >
                         <button
                             onClick={() => setIsCommitted(true)}
-                            className="pointer-events-auto group px-12 py-5 bg-[var(--foreground)] text-[var(--background)] rounded-full text-xl font-bold shadow-[0_20px_40px_rgb(0,0,0,0.15)] dark:shadow-[0_20px_40px_rgb(255,255,255,0.05)] hover:scale-[1.03] transition-all flex items-center gap-3"
+                            className="pointer-events-auto px-16 py-6 border border-[var(--foreground)] bg-[var(--foreground)] text-[var(--background)] text-xs font-bold tracking-[0.2em] uppercase hover:bg-neutral-800 transition-colors flex items-center gap-4 group"
                         >
-                            오늘 이거 입기 <CheckCircle2 size={24} className="group-hover:scale-110 transition-transform" />
+                            Select Look <CheckCircle2 size={18} strokeWidth={1.5} className="group-hover:scale-110 transition-transform" />
                         </button>
                     </motion.div>
                 ) : isCommitted ? (
@@ -296,8 +302,8 @@ export default function DashboardPage() {
 
 // Mocks
 const TPOs = [
-    { id: "work", label: "🏢 💼 출근/비즈니스" },
-    { id: "date", label: "🍷 🥂 데이트" },
-    { id: "casual", label: "☕ 🛹 힙/캐주얼" },
-    { id: "formal", label: "👔 🎩 포멀/경조사" },
+    { id: "work", label: "Business" },
+    { id: "date", label: "Date" },
+    { id: "casual", label: "Casual" },
+    { id: "formal", label: "Formal" },
 ];

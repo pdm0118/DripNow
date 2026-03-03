@@ -36,13 +36,14 @@ export default function Home() {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col gap-6 w-full"
+          className="flex flex-col gap-8 w-full items-center"
         >
-          <h2 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-[-0.02em] leading-[1.1] text-[var(--foreground)]">
-            Elevate Your <br className="hidden sm:block" /> Everyday Wardrobe.
+          <h2 className="text-5xl sm:text-6xl md:text-8xl font-serif tracking-tight leading-[1] text-[var(--foreground)]">
+            <span className="italic font-light">Elevate Your</span><br className="hidden sm:block" />
+            <span className="font-medium">Everyday Wardrobe.</span>
           </h2>
-          <p className="text-[var(--muted-foreground)] text-lg sm:text-xl md:text-2xl font-light leading-relaxed max-w-2xl mx-auto">
-            정교한 체형 분석과 실시간 날씨 데이터를 결합한 <br className="hidden sm:block" /> 완벽한 퍼스널 스타일링 큐레이션.
+          <p className="text-neutral-500 text-sm sm:text-md tracking-widest uppercase font-medium leading-relaxed max-w-2xl mx-auto mt-4">
+            정교한 분석과 실시간 데이터를 결합한 완벽한 큐레이션
           </p>
         </motion.div>
 
@@ -51,15 +52,20 @@ export default function Home() {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full max-w-md sm:max-w-none justify-center mt-4"
+          className="flex flex-col sm:flex-row gap-6 w-full max-w-md sm:max-w-none justify-center mt-8 px-6"
         >
-          <Link href="/wardrobe" className="group flex items-center justify-center gap-3 rounded-full bg-[var(--foreground)] text-[var(--background)] px-8 md:px-10 py-4 md:py-5 text-lg md:text-xl font-medium shadow-2xl hover:scale-[1.02] transition-transform duration-300">
-            <Sparkles size={22} className="opacity-80 group-hover:opacity-100 transition-opacity" />
-            내 옷장 관리
+          <Link href="/wardrobe" className="group flex items-center justify-center gap-4 border border-[var(--foreground)] bg-[var(--foreground)] text-[var(--background)] px-10 py-5 text-sm uppercase tracking-widest font-bold hover:bg-neutral-800 transition-all duration-500">
+            <span className="relative overflow-hidden">
+              <span className="block transition-transform duration-500 group-hover:-translate-y-full">Manage Wardrobe</span>
+              <span className="absolute inset-0 block translate-y-full transition-transform duration-500 group-hover:translate-y-0">내 옷장 관리</span>
+            </span>
           </Link>
-          <Link href="/dashboard" className="group flex items-center justify-center gap-3 rounded-full bg-transparent text-[var(--foreground)] border border-[var(--card-border)] backdrop-blur-md px-8 md:px-10 py-4 md:py-5 text-lg md:text-xl font-medium hover:border-[var(--foreground)] transition-all duration-300">
-            오늘 뭐 입지?
-            <ArrowRight size={22} className="opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+          <Link href="/dashboard" className="group flex items-center justify-center gap-4 bg-transparent text-[var(--foreground)] border border-neutral-200 dark:border-neutral-800 px-10 py-5 text-sm uppercase tracking-widest font-bold hover:border-[var(--foreground)] transition-all duration-500">
+            <span className="relative overflow-hidden">
+              <span className="block transition-transform duration-500 group-hover:-translate-y-full">Get Recommendations</span>
+              <span className="absolute inset-0 block translate-y-full transition-transform duration-500 group-hover:translate-y-0">오늘 뭐 입지?</span>
+            </span>
+            <ArrowRight size={18} strokeWidth={1.5} className="transition-transform duration-500 group-hover:translate-x-2" />
           </Link>
         </motion.div>
       </main>
