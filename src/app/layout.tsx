@@ -1,16 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
-
-const inter = Inter({
-  variable: "--font-sans",
-  subsets: ["latin"],
-});
-
-const playfair = Playfair_Display({
-  variable: "--font-serif",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "DripNow | No More Outfit Dilemmas",
@@ -24,7 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="kr" className="scroll-smooth">
-      <body className={`${inter.variable} ${playfair.variable} antialiased`}>
+      <body className="antialiased text-[var(--foreground)] bg-[var(--background)]">
         {children}
       </body>
     </html>

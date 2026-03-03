@@ -17,13 +17,12 @@ export default function AddUrlPage() {
     const [error, setError] = useState<string | null>(null);
 
     // Parsed resulting data
-    const [scrapedData, setScrapedData] = useState<{ name: string, category: string, color: string, price?: number } | null>(null);
+    const [scrapedData, setScrapedData] = useState<{ name: string, brand?: string, category: string, color: string, material?: string, thickness?: string } | null>(null);
 
-    const handleParse = (e: React.FormEvent) => {
+    const handleParse = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!url.trim()) return;
 
-        // Basic URL validation
         try {
             new URL(url);
         } catch {
@@ -35,24 +34,32 @@ export default function AddUrlPage() {
         setIsLoading(true);
         setScrapedData(null);
 
-        // Simulate scraping and parsing delay
-        setTimeout(() => {
-            if (url.includes("musinsa") || url.includes("29cm")) {
-                setScrapedData({
-                    name: "썸머 릴렉스드 하프 셔츠 (스카이블루)",
-                    category: "top",
-                    color: "Sky Blue",
-                    price: 49000
-                });
-            } else {
-                setScrapedData({
-                    name: "베이직 코튼 팬츠",
-                    category: "bottom",
-                    color: "Beige",
-                });
+        try {
+            const res = await fetch("/api/parse-url", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ url })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || "상품 정보를 분석하는데 실패했습니다.");
             }
+
+            setScrapedData({
+                name: data.name || "알 수 없는 상품명",
+                brand: data.brand || "미상",
+                category: data.category || "top",
+                color: data.color || "색상표기 없음",
+                material: data.material || "미상",
+                thickness: data.thickness || "normal"
+            });
+        } catch (err: any) {
+            setError(err.message || "오류가 발생했습니다.");
+        } finally {
             setIsLoading(false);
-        }, 2000);
+        }
     };
 
     const handleSubmit = () => {
@@ -65,8 +72,8 @@ export default function AddUrlPage() {
             category: scrapedData.category as any,
             name: scrapedData.name,
             color: scrapedData.color,
-            thickness: "normal",
-            fit: "standard", // default fallback
+            thickness: (["thin", "normal", "thick"].includes(scrapedData.thickness as string) ? scrapedData.thickness : "normal") as "thin" | "normal" | "thick",
+            fit: "standard",
             isWashing: false,
             createdAt: new Date().toISOString(),
         };
@@ -189,8 +196,22 @@ export default function AddUrlPage() {
                                             <div className="font-semibold text-lg uppercase">{scrapedData.category}</div>
                                         </div>
                                         <div>
+                                            <label className="block text-xs font-bold tracking-widest uppercase text-neutral-400 mb-2">추출된 브랜드</label>
+                                            <div className="font-semibold text-lg">{scrapedData.brand}</div>
+                                        </div>
+                                        <div>
                                             <label className="block text-xs font-bold tracking-widest uppercase text-neutral-400 mb-2">추출된 색상</label>
                                             <div className="font-semibold text-lg">{scrapedData.color}</div>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold tracking-widest uppercase text-neutral-400 mb-2">추정 두께감</label>
+                                            <div className="font-semibold text-lg uppercase bg-[var(--foreground)] text-[var(--background)] inline-block px-3 py-1 rounded-full text-sm">
+                                                {scrapedData.thickness}
+                                            </div>
+                                        </div>
+                                        <div className="col-span-2">
+                                            <label className="block text-xs font-bold tracking-widest uppercase text-neutral-400 mb-2">소재 / 재질</label>
+                                            <div className="font-semibold text-lg">{scrapedData.material}</div>
                                         </div>
                                     </div>
                                 </div>
