@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Search, Image as ImageIcon, Link2, Type, Shirt } from "lucide-react";
+import { Plus, Image as ImageIcon, Link2, Type, Shirt } from "lucide-react";
 import clsx from "clsx";
 import Link from "next/link";
 import { useLocalStorage, ClothingItem } from "@/hooks/useLocalStorage";
@@ -34,21 +34,26 @@ export default function WardrobePage() {
     return (
         <div className="min-h-[100dvh] bg-[var(--background)] text-[var(--foreground)] pb-24">
             {/* Header */}
-            <header className="sticky top-0 z-20 bg-[var(--background)]/80 backdrop-blur-xl pt-14 pb-3 px-5">
-                <div className="max-w-2xl mx-auto">
-                    <h1 className="text-[28px] font-bold tracking-tight mb-1">옷장</h1>
-                    <p className="text-[13px] text-[var(--muted-foreground)]">총 {wardrobe.length}벌</p>
+            <header className="page-header pt-14 pb-1 px-[var(--space-page)]">
+                <div className="flex items-baseline justify-between">
+                    <h1 className="text-[var(--text-2xl)] font-bold tracking-tight" style={{ fontSize: "var(--text-2xl)" }}>옷장</h1>
+                    <span className="text-[var(--text-sm)] text-[var(--muted-foreground)] font-medium" style={{ fontSize: "var(--text-sm)" }}>
+                        {wardrobe.length}벌
+                    </span>
                 </div>
             </header>
 
             {/* Category Tabs */}
-            <div className="sticky top-[88px] z-10 bg-[var(--background)]/80 backdrop-blur-xl px-5 pb-3">
-                <div className="max-w-2xl mx-auto flex gap-2 overflow-x-auto scrollbar-hide">
+            <div className="page-header top-[56px] px-[var(--space-page)] py-3">
+                <div className="flex gap-2 overflow-x-auto scrollbar-hide">
                     {TABS.map(tab => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
-                            className={clsx("px-4 py-2 rounded-full text-[14px] font-semibold whitespace-nowrap transition-all", activeTab === tab.id ? "bg-[var(--foreground)] text-[var(--background)]" : "bg-[var(--card-bg)] text-[var(--muted-foreground)] active:bg-[var(--separator)]")}
+                            className={clsx(
+                                "pill transition-all",
+                                activeTab === tab.id && "pill-active"
+                            )}
                         >
                             {tab.label}
                         </button>
@@ -56,32 +61,43 @@ export default function WardrobePage() {
                 </div>
             </div>
 
-            <main className="max-w-2xl mx-auto px-5 mt-4">
+            <main className="px-[var(--space-page)] mt-3">
                 {wardrobe.length === 0 ? (
-                    /* Empty State */
-                    <div className="flex flex-col items-center justify-center py-28 text-center">
+                    <div className="flex flex-col items-center justify-center py-24 text-center">
                         <div className="w-16 h-16 bg-[var(--card-bg)] rounded-full flex items-center justify-center mb-5">
-                            <Shirt size={28} className="text-[var(--muted-foreground)]" />
+                            <Shirt size={26} className="text-[var(--muted-foreground)]" />
                         </div>
-                        <h2 className="text-[20px] font-bold mb-2">아직 옷이 없어요</h2>
-                        <p className="text-[15px] text-[var(--muted-foreground)] mb-8">옷을 등록해서 나만의 디지털 옷장을<br />만들어 보세요.</p>
-                        <button onClick={() => setIsAddMenuOpen(true)} className="px-6 py-3 bg-[var(--accent)] text-white rounded-[14px] text-[16px] font-semibold active:opacity-80 transition-opacity flex items-center gap-2">
+                        <h2 className="text-[var(--text-lg)] font-bold mb-2" style={{ fontSize: "var(--text-lg)" }}>아직 옷이 없어요</h2>
+                        <p className="text-[var(--text-base)] text-[var(--muted-foreground)] mb-8 leading-relaxed" style={{ fontSize: "var(--text-base)" }}>
+                            옷을 등록해서 나만의<br />디지털 옷장을 만들어 보세요.
+                        </p>
+                        <button onClick={() => setIsAddMenuOpen(true)} className="btn-primary !w-auto px-6 flex items-center gap-2">
                             <Plus size={18} /> 옷 추가하기
                         </button>
                     </div>
                 ) : (
-                    /* Grid */
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-2 gap-2.5">
                         {filteredItems.map((item) => (
-                            <div key={item.id} className="bg-[var(--card-bg)] rounded-[16px] overflow-hidden active:scale-[0.98] transition-transform">
-                                <div className="aspect-square bg-[var(--separator)] flex items-center justify-center">
-                                    <ImageIcon size={28} className="text-[var(--muted-foreground)] opacity-40" />
+                            <motion.div
+                                key={item.id}
+                                layout
+                                initial={{ opacity: 0, scale: 0.96 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="native-card overflow-hidden active:scale-[0.97] transition-transform cursor-pointer"
+                            >
+                                <div className="aspect-[4/3] bg-[var(--card-bg-elevated)] flex items-center justify-center">
+                                    {item.imageUrl ? (
+                                        // eslint-disable-next-line @next/next/no-img-element
+                                        <img src={item.imageUrl} alt={item.name || ""} className="w-full h-full object-cover" />
+                                    ) : (
+                                        <ImageIcon size={24} className="text-[var(--muted-foreground)] opacity-30" />
+                                    )}
                                 </div>
                                 <div className="p-3">
-                                    <h3 className="text-[15px] font-semibold truncate mb-0.5">{item.name}</h3>
-                                    <p className="text-[12px] text-[var(--muted-foreground)]">{categoryLabel(item.category)} · {item.color}</p>
+                                    <h3 className="text-[14px] font-semibold truncate mb-0.5">{item.name}</h3>
+                                    <p className="text-[12px] text-[var(--muted-foreground)]">{categoryLabel(item.category)}{item.color ? ` · ${item.color}` : ""}</p>
                                 </div>
-                            </div>
+                            </motion.div>
                         ))}
                     </div>
                 )}
@@ -91,9 +107,12 @@ export default function WardrobePage() {
             {wardrobe.length > 0 && (
                 <button
                     onClick={() => setIsAddMenuOpen(!isAddMenuOpen)}
-                    className={clsx("fixed bottom-24 right-5 z-[45] w-14 h-14 rounded-full bg-[var(--accent)] text-white flex items-center justify-center shadow-lg active:scale-95 transition-all", isAddMenuOpen && "rotate-45")}
+                    className={clsx(
+                        "fixed bottom-24 right-5 z-[45] w-[52px] h-[52px] rounded-full bg-[var(--accent)] text-white flex items-center justify-center shadow-lg active:scale-90 transition-all duration-200",
+                        isAddMenuOpen && "rotate-45"
+                    )}
                 >
-                    <Plus size={26} />
+                    <Plus size={24} strokeWidth={2.2} />
                 </button>
             )}
 
@@ -103,26 +122,25 @@ export default function WardrobePage() {
                     <>
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsAddMenuOpen(false)} className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm" />
                         <motion.div
-                            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                            initial={{ opacity: 0, y: 16, scale: 0.95 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+                            exit={{ opacity: 0, y: 16, scale: 0.95 }}
                             transition={{ duration: 0.2 }}
-                            className="fixed bottom-40 right-5 z-[46] bg-[var(--background)] border border-[var(--card-border)] rounded-[16px] shadow-2xl overflow-hidden min-w-[200px]"
+                            className="fixed bottom-[140px] right-5 z-[46] bg-[var(--background)] border border-[var(--card-border)] rounded-[var(--radius-md)] shadow-xl overflow-hidden min-w-[180px]"
                         >
-                            <Link href="/wardrobe/add-url" className="flex items-center gap-3 px-5 py-4 hover:bg-[var(--card-bg)] transition-colors">
-                                <Link2 size={20} className="text-[var(--accent)]" />
-                                <span className="text-[15px] font-medium">링크로 등록</span>
-                            </Link>
-                            <div className="h-px bg-[var(--separator)] mx-4" />
-                            <Link href="/wardrobe/add-photo" className="flex items-center gap-3 px-5 py-4 hover:bg-[var(--card-bg)] transition-colors">
-                                <ImageIcon size={20} className="text-[var(--accent)]" />
-                                <span className="text-[15px] font-medium">사진으로 등록</span>
-                            </Link>
-                            <div className="h-px bg-[var(--separator)] mx-4" />
-                            <Link href="/wardrobe/add-manual" className="flex items-center gap-3 px-5 py-4 hover:bg-[var(--card-bg)] transition-colors">
-                                <Type size={20} className="text-[var(--accent)]" />
-                                <span className="text-[15px] font-medium">직접 입력</span>
-                            </Link>
+                            {[
+                                { href: "/wardrobe/add-url", icon: Link2, label: "링크로 등록" },
+                                { href: "/wardrobe/add-photo", icon: ImageIcon, label: "사진으로 등록" },
+                                { href: "/wardrobe/add-manual", icon: Type, label: "직접 입력" },
+                            ].map((item, i) => (
+                                <div key={item.href}>
+                                    {i > 0 && <div className="h-px bg-[var(--separator)] mx-4" />}
+                                    <Link href={item.href} className="flex items-center gap-3 px-4 py-3.5 active:bg-[var(--card-bg)] transition-colors">
+                                        <item.icon size={18} className="text-[var(--accent)]" />
+                                        <span className="text-[15px] font-medium">{item.label}</span>
+                                    </Link>
+                                </div>
+                            ))}
                         </motion.div>
                     </>
                 )}
